@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "assets/*": ["./assets/*"],
+      "engine/*": ["./src/game/engine/*"],
+      "styles/*": ["./src/styles/*"],
+      "game/*": ["./src/game/*"]
+    }
+  }
+}
