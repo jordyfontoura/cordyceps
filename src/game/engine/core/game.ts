@@ -74,11 +74,20 @@ export class GameEngine {
     this.gameObjects = [];
   }
 
-  iniciar(cenário?: string) {
+  async iniciar(cenário?: string) {
     switch (this.status) {
       case "parado":
-        console.log("Reiniciando jogo...");
       case "acordando":
+        if (this.status === "parado") {
+          console.log("Reiniciando jogo...");
+          this.gameObjects.map((o) => o.destruir())
+          this.rotinas.forEach(rotina => {
+            if (rotina.tipo === 'rotina') {
+              rotina.executar()
+            }
+          })
+          this.gameObjects = [];
+        }
         this.status = "rodando";
         console.log(`Jogo iniciado!`);
         if (!Object.values(Cenário.cenário).length) {
@@ -176,7 +185,7 @@ export class GameEngine {
           rotina.executar(tela);
         }
       }
-      this.gameObjects.forEach((gameObject) => gameObject.render?.(tela));
+      this.gameObjects.sort((a, b)=> a.zIndex - b.zIndex).forEach((gameObject) => gameObject.render?.(tela));
     });
   }
 

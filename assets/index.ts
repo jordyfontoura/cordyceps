@@ -9,7 +9,10 @@ interface IAssets{
 const Assets: IAssets = {
   cenários,
   carregar(){
-
+    
   },
+  configurações: {
+    fps: 60
+  }
 };
 export default Assets;

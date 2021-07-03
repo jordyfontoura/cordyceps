@@ -15,6 +15,16 @@ const Tempo = {
       return Jogo.fps * valor;
     }
     return valor;
+  },
+  cooldowns: {} as Record<number, {tempo: number, started: number}>,
+  startCooldown(id: number, tempo: number){
+    this.cooldowns[id] = {
+      tempo,
+      started: Date.now()
+    }
+  },
+  cooldown(id: number): boolean{
+    return (Date.now() - this.cooldowns[id].started) > this.cooldowns[id].tempo;
   }
 }
 export default Tempo;

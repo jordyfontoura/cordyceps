@@ -29,6 +29,20 @@ const Aleatorizar = {
       Vetor.Baixo,
     ]);
   },
+  Index(probabilidades: number[]){
+    let soma = 0;
+    let resultado = 0;
+    let total = probabilidades.reduce((a, b)=>a+b, 0);
+    const escolha = Math.random() * total;
+    for (let i = 0; i < probabilidades.length; i++) {
+      if (escolha <= soma) {
+        return resultado;
+      }
+      resultado = i;
+      soma += probabilidades[i];
+    }
+    return probabilidades.length-1;
+  },
   Chance(chance: number): boolean {
     return Math.random() < chance;
   },

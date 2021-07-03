@@ -5,8 +5,9 @@ import { Tela } from "./tela";
 
 export abstract class GameObject {
   id: number;
-  position: Vetor;
+  posição: Vetor;
   name: string;
+  zIndex: number = 0;
 
   constructor(position: Vetor = Vetor.Zero) {
     if (!Jogo) {
@@ -16,7 +17,7 @@ export abstract class GameObject {
     }
     this.id = Aleatorizar.Id();
     this.name = this.id.toString();
-    this.position = position;
+    this.posição = position;
     GameEngine.instanciar(this);
   }
   despertar?(): void;

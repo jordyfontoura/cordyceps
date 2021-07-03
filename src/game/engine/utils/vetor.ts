@@ -1,4 +1,7 @@
 export class Vetor {
+  static get Direções(){
+    return [this.Esquerda, this.Direita, this.Cima, this.Baixo];
+  }
   static get Zero() {
     return new Vetor(0, 0);
   }
