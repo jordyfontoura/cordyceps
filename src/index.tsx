@@ -5,7 +5,7 @@ import App from "./App";
 import load from "./game/index";
 import reportWebVitals from "./reportWebVitals";
 
-load({fps: 30});
+load({fps: 120});
 ReactDOM.render(
   <React.StrictMode>
     <App />

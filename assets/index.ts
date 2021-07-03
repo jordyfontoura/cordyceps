@@ -1,9 +1,15 @@
+import { GameEngine, IGameConfig } from "engine/core/game";
+import { Cenário } from "engine/core/scene";
 import cenários from "./scenes";
-
-const Assets = {
+interface IAssets{
+  cenários: Cenário[];
+  carregar(jogo: GameEngine): void;
+  configurações?: IGameConfig
+}
+const Assets: IAssets = {
   cenários,
   carregar(){
 
-  }
+  },
 };
 export default Assets;

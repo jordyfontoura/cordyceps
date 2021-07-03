@@ -4,8 +4,8 @@ import Subject from "engine/utils/observer";
 
 
 function load(config: IGameConfig){
-  const Jogo = GameEngine.criar(config);
-  console.log("Load")
+  const configurações  = Assets.configurações || config;
+  const Jogo = GameEngine.criar(configurações);
 
   Subject.listen("Game.play", () => {
     Jogo.iniciar();
@@ -23,6 +23,6 @@ function load(config: IGameConfig){
     Jogo.deletarTela(params.element);
   });
 
-  Assets.carregar?.();
+  Assets.carregar?.(Jogo);
 }
 export default load;

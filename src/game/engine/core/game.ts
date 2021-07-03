@@ -1,3 +1,4 @@
+/* eslint-disable no-fallthrough */
 import Tempo from "../utils/time";
 import { GameObject } from "./gameobject";
 import { Cenário } from "./scene";
@@ -16,7 +17,7 @@ type IRotina =
 export interface IGameConfig {
   largura?: number;
   altura?: number;
-  fps:  number;
+  fps: number;
 }
 declare global {
   interface IObserversTypes {
@@ -37,8 +38,10 @@ declare global {
 
 export let Jogo: GameEngine;
 export class GameEngine {
-  status: "rodando" | "pausado" | "parado";
-  get  fps(){return this.configurações.fps;}
+  status: "acordando" | "rodando" | "pausado" | "parado";
+  get fps() {
+    return this.configurações.fps;
+  }
   telas: Tela[];
   gameObjects: GameObject[];
   configurações: IGameConfig;
@@ -49,7 +52,7 @@ export class GameEngine {
   static criar(config: IGameConfig) {
     if (!Jogo) {
       Jogo = new GameEngine(config);
-    }else{
+    } else {
       Jogo.configurações = config;
     }
     return Jogo;
@@ -65,21 +68,35 @@ export class GameEngine {
     // if (ctx === null) {
     //   throw new Error("canvas.getContext('2d') não encontrado");
     // }
-    this.status = 'parado'
+    this.status = "acordando";
     this.configurações = config;
     this.telas = [];
     this.gameObjects = [];
   }
 
   iniciar(cenário?: string) {
-    this.status = "rodando";
-    console.log(`Jogo iniciado!`);
-    if (!Object.values(Cenário.cenário).length) {
-      throw new Error("Nenhum cenário foi criado!");
-      
+    switch (this.status) {
+      case "parado":
+        console.log("Reiniciando jogo...");
+      case "acordando":
+        this.status = "rodando";
+        console.log(`Jogo iniciado!`);
+        if (!Object.values(Cenário.cenário).length) {
+          throw new Error("Nenhum cenário foi criado!");
+        }
+        Cenário.cenário[cenário || Object.keys(Cenário.cenário)[0]].carregar(
+          this
+        );
+        return this.loop();
+
+      case "pausado":
+        console.log("Resumindo jogo");
+        this.status = "rodando";
+        break;
+
+      default:
+        break;
     }
-    Cenário.cenário[cenário || Object.keys(Cenário.cenário)[0]].carregar(this);
-    return this.loop();
   }
   pausar() {
     this.status = "pausado";
@@ -101,7 +118,7 @@ export class GameEngine {
     this.telas.push(new Tela(canvas, this.configurações));
   }
   deletarTela(id: string) {
-    const index = this.telas.findIndex(tela=>tela.id === id);
+    const index = this.telas.findIndex((tela) => tela.id === id);
     if (index < 0) {
       return;
     }
