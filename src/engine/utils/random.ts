@@ -8,7 +8,7 @@ export namespace Aleatorizar {
    * @returns
    */
   export function Int(inicio: number, fim: number) {
-    return Math.floor(Math.random() * (fim - inicio));
+    return inicio+Math.floor(Math.random() * (fim - inicio));
   }
   export function Item(lista: any[]) {
     return lista[Aleatorizar.Int(0, lista.length)];
@@ -28,5 +28,8 @@ export namespace Aleatorizar {
       Vetor.Cima,
       Vetor.Baixo,
     ]);
+  }
+  export function Chance(chance: number): boolean {
+    return Math.random() < chance;
   }
 }

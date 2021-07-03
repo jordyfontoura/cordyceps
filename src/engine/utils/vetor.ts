@@ -40,4 +40,7 @@ export class Vetor {
   get magnitude() {
     return Math.sqrt(this.x ** 2 + this.y ** 2);
   }
+  igual(other: Vetor){
+    return this.x === other.x && this.y === other.y;
+  }
 }

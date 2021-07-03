@@ -6,6 +6,7 @@ import { Aleatorizar } from "../utils/random.js";
 export abstract class GameObject {
   id: number;
   position: Vetor;
+  name: string;
 
   constructor(position: Vetor = Vetor.Zero) {
     if (!Jogo) {
@@ -14,12 +15,14 @@ export abstract class GameObject {
       );
     }
     this.id = Aleatorizar.Id();
+    this.name = this.id.toString();
     this.position = position;
     GameEngine.instanciar(this);
   }
   despertar?(): void;
   tick?(): void;
   render?(tela: Tela): void;
+  quandoDestruir?(): void;
   destruir() {
     return GameEngine.destruir(this);
   }

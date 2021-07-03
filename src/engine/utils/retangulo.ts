@@ -1,4 +1,4 @@
-import { Vetor } from "./vetor";
+import { Vetor } from "./vetor.js";
 
 export class Retangulo {
   posição: Vetor;

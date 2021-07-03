@@ -1,23 +1,8 @@
 import { Vetor } from "../utils/vetor.js";
-import { Formiga } from "../formiga.js";
-import { esperar } from "../utils/time.js";
+import { Tempo } from "../utils/time.js";
 import { GameObject } from "./gameobject.js";
 import { Tela } from "./tela.js";
 import { Cenário } from "./scene.js";
-
-type ITela = CanvasRenderingContext2D & {
-  centro: Vetor;
-  size: Vetor;
-};
-
-export interface IGame {
-  formigas: Formiga[];
-  tela: ITela;
-  canvas: HTMLCanvasElement;
-  desenhar: (pixel: Vetor, color: string) => boolean;
-  podeMover(quem: Formiga, para: Vetor): boolean;
-  tick: () => void;
-}
 
 type IRotina =
   | {
@@ -29,7 +14,7 @@ type IRotina =
       executar: () => void;
     };
 
-interface IGameConfig{
+export interface IGameConfig {
   largura?: number;
   altura?: number;
 }
@@ -46,9 +31,12 @@ export class GameEngine {
   // Singleton
   static criar(canvas: HTMLCanvasElement | string, config?: IGameConfig) {
     if (!Jogo) {
-      if (typeof canvas === 'string') {
-        Jogo = new GameEngine(document.getElementById(canvas) as HTMLCanvasElement, config);
-      }else{
+      if (typeof canvas === "string") {
+        Jogo = new GameEngine(
+          document.getElementById(canvas) as HTMLCanvasElement,
+          config
+        );
+      } else {
         Jogo = new GameEngine(canvas, config);
       }
     }
@@ -72,13 +60,13 @@ export class GameEngine {
 
   iniciar() {
     this.status = "rodando";
-    console.log(`Jogo iniciado!`)
+    console.log(`Jogo iniciado!`);
     return this.loop();
   }
-  carregar(cenário: Cenário){
-    console.log(`Carregando cenário: ${cenário.nome}`)
+  carregar(cenário: Cenário) {
+    console.log(`Carregando cenário: ${cenário.nome}`);
     cenário.carregar(this);
-    console.log(`Cenário '${cenário.nome}' carregado com sucesso!`)
+    console.log(`Cenário '${cenário.nome}' carregado com sucesso!`);
   }
 
   rotina(fn: IRotina | undefined) {
@@ -92,12 +80,16 @@ export class GameEngine {
       this.tick();
       this.render();
 
-      await esperar(1000 / Jogo.fps);
+      await Tempo.esperar(1000 / Jogo.fps);
     }
   }
 
   private tick() {
-    console.debug(`Tick: ${this.ticks}`);
+    console.debug(
+      `Tempo: ${Tempo.converter(this.ticks, "ticks", "segundos").toPrecision(
+        2
+      )} ` + `Tick: ${this.ticks}`
+    );
     const rotinas = this.rotinas.filter((rotina) => rotina.tipo === "rotina");
     this.rotinas = this.rotinas.filter((rotina) => rotina.tipo !== "rotina");
     while (true) {
@@ -115,7 +107,7 @@ export class GameEngine {
   }
 
   private render() {
-    // this.tela.limparTela();
+    this.tela.limparTela();
     const rotinas = this.rotinas.filter((rotina) => rotina.tipo === "visual");
     this.rotinas = this.rotinas.filter((rotina) => rotina.tipo !== "visual");
     while (true) {
@@ -141,7 +133,7 @@ export class GameEngine {
     return gameObject;
   }
 
-  static async destruir<T extends GameObject>(gameObject: T) {
+  static async destruir<T extends GameObject>(gameObject: T): Promise<boolean> {
     return new Promise((resolve) => {
       Jogo.rotina({
         tipo: "rotina",
@@ -150,9 +142,24 @@ export class GameEngine {
             (o) => o.id === gameObject.id
           );
           if (index < 0) {
+            console.warn(
+              `Falha ao destruir GameObject[${gameObject.id}]${
+                gameObject.name !== gameObject.id.toString()
+                  ? " '" + gameObject.name + "'"
+                  : ""
+              }`
+            );
             return resolve(false);
           }
-          Jogo.gameObjects.splice(index);
+          gameObject.quandoDestruir?.();
+          Jogo.gameObjects.splice(index, 1);
+          console.debug(
+            `GameObject[${gameObject.id}]${
+              gameObject.name !== gameObject.id.toString()
+                ? " '" + gameObject.name + "'"
+                : ""
+            } destruido`
+          );
           resolve(true);
         },
       });

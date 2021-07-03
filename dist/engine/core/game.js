@@ -83,7 +83,7 @@ export class GameEngine {
         this.ticks++;
     }
     render() {
-        // this.tela.limparTela();
+        this.tela.limparTela();
         const rotinas = this.rotinas.filter((rotina) => rotina.tipo === "visual");
         this.rotinas = this.rotinas.filter((rotina) => rotina.tipo !== "visual");
         while (true) {
@@ -123,9 +123,9 @@ export class GameEngine {
                         }
                         (_a = gameObject.quandoDestruir) === null || _a === void 0 ? void 0 : _a.call(gameObject);
                         Jogo.gameObjects.splice(index, 1);
-                        console.info(`GameObject[${gameObject.id}]${gameObject.name !== gameObject.id.toString()
+                        console.debug(`GameObject[${gameObject.id}]${gameObject.name !== gameObject.id.toString()
                             ? " '" + gameObject.name + "'"
-                            : ""}' destruido`);
+                            : ""} destruido`);
                         resolve(true);
                     },
                 });
