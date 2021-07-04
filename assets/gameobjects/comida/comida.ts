@@ -1,7 +1,4 @@
-import { GameObject } from "engine/core/gameobject";
-import { Tela } from "engine/core/tela";
-import Aleatorizar from "engine/utils/random";
-import { Vetor } from "engine/utils/vetor";
+import { Aleatorizar, GameObject, Tela, Vetor } from "engine";
 import { Formiga } from "../formiga/formiga";
 
 export class Comida extends GameObject {

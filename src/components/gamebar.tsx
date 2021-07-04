@@ -1,4 +1,4 @@
-import { emit } from "engine/utils/observer";
+import { emit } from "game/utils/observer";
 import { Component } from "react";
 import './gamebar.scss';
 

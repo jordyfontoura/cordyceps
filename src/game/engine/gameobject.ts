@@ -1,5 +1,5 @@
-import Aleatorizar from "../utils/random";
-import { Vetor } from "../utils/vetor";
+import Aleatorizar from "game/utils/random";
+import { Vetor } from "game/utils/vetor";
 import { GameEngine, Jogo } from "./game";
 import { Tela } from "./tela";
 

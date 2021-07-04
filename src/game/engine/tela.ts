@@ -1,5 +1,6 @@
-import { Vetor } from "../utils/vetor";
+import { Vetor } from "game/utils/vetor";
 import { IGameConfig } from "./game";
+
 
 export class Tela {
   id: number;

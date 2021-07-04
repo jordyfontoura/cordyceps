@@ -1,4 +1,4 @@
-import Aleatorizar from "engine/utils/random";
+import Aleatorizar from "game/utils/random";
 
 const debuggers: {
   id: number;

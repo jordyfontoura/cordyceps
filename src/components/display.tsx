@@ -1,6 +1,6 @@
-import { emit } from "engine/utils/observer";
-import Aleatorizar from "engine/utils/random";
-import { Vetor } from "engine/utils/vetor";
+import { emit } from "game/utils/observer";
+import Aleatorizar from "game/utils/random";
+import { Vetor } from "game/utils/vetor";
 import { Component } from "react";
 import "./display.scss";
 

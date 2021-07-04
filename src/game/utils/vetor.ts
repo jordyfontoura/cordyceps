@@ -40,6 +40,9 @@ export class Vetor {
 
     return new Vetor(this.x / other.x, this.y / other.y);
   }
+  distância(other: Vetor): number{
+    return this.sub(other).magnitude;
+  }
   get magnitude() {
     return Math.sqrt(this.x ** 2 + this.y ** 2);
   }

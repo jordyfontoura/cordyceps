@@ -1,10 +1,10 @@
-import { debug } from "engine/core/debug";
-import { Jogo } from "engine/core/game";
-import { GameObject } from "engine/core/gameobject";
-import { Tela } from "engine/core/tela";
-import Aleatorizar from "engine/utils/random";
-import Tempo from "engine/utils/time";
-import { Vetor } from "engine/utils/vetor";
+import { Aleatorizar, debug, GameObject, Jogo, Tela, Tempo, Vetor } from "engine";
+// import { Jogo } from "engine/game";
+// import { GameObject } from "engine/gameobject";
+// import { Tela } from "engine/tela";
+// import Aleatorizar from "game/utils/random";
+// import Tempo from "game/utils/time";
+// import { Vetor } from "game/utils/vetor";
 import { Comida } from "../comida/comida";
 import { Rastro } from "./rastro";
 import { RestosMortais } from "./restormortais";
@@ -17,11 +17,7 @@ export class Formiga extends GameObject {
     super(posição);
     const tempoEstimado = Aleatorizar.Int(0, 30);
     debug(`Formiga criada ${tempoEstimado}`);
-    this.calorias = Tempo.converter(
-      tempoEstimado,
-      "segundos",
-      "ticks"
-    );
+    this.calorias = Tempo.converter(tempoEstimado, "segundos", "ticks");
     this.caloriasMaxima = this.calorias;
     Tempo.startCooldown(this.id, 10000);
   }
@@ -83,7 +79,9 @@ export class Formiga extends GameObject {
   }
   comer(comida: Comida) {
     Tempo.startCooldown(this.id, 10000);
-    debug(`Eu ${this.nome} comi ${comida.nome} que tinha ${comida.caloria} calorias`);
+    debug(
+      `Eu ${this.nome} comi ${comida.nome} que tinha ${comida.caloria} calorias`
+    );
     comida.alimentar(this);
   }
   render(tela: Tela) {

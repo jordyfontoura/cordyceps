@@ -1,4 +1,4 @@
-import { IGameConfig } from "engine/core/game";
+import { IGameConfig } from "engine/game";
 
 const config = { altura: 300, largura: 300 };
 

@@ -1,4 +1,4 @@
-import { Jogo } from "../core/game";
+import { Jogo } from "../engine/game";
 
 const Tempo = {
   esperar(ms: number) {

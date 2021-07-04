@@ -1,5 +1,5 @@
 import Assets from "assets";
-import { GameEngine, IGameConfig } from "engine/core/game";
+import { GameEngine, IGameConfig } from "engine/game";
 import Events from './events';
 function load(config: IGameConfig) {
   const configurações = Assets.configurações || config;

@@ -1,6 +1,6 @@
-import { GameObject } from "engine/core/gameobject";
-import { emit } from "engine/utils/observer";
-import Aleatorizar from "engine/utils/random";
+import { GameObject } from "engine/gameobject";
+import { emit } from "game/utils/observer";
+import Aleatorizar from "game/utils/random";
 import { Component } from "react";
 import "./hierarchy.scss";
 

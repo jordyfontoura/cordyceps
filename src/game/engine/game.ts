@@ -1,6 +1,6 @@
 /* eslint-disable no-fallthrough */
-import { emit } from "engine/utils/observer";
-import Tempo from "../utils/time";
+import { emit } from "game/utils/observer";
+import Tempo from "game/utils/time";
 import { GameObject } from "./gameobject";
 import { Cenário } from "./scene";
 import { Tela } from "./tela";

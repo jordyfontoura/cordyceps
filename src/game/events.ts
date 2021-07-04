@@ -1,9 +1,9 @@
-import { createDebug, deleteDebug } from "engine/core/debug";
-import { Jogo } from "engine/core/game";
-import { GameObject } from "engine/core/gameobject";
-import { Tela } from "engine/core/tela";
-import Subject from "engine/utils/observer";
-import { Vetor } from "engine/utils/vetor";
+import { createDebug, deleteDebug } from "engine/debug";
+import { Jogo } from "engine/game";
+import { GameObject } from "engine/gameobject";
+import { Tela } from "engine/tela";
+import Subject from "game/utils/observer";
+import { Vetor } from "game/utils/vetor";
 declare global {
   interface IObserversTypes {
     "Game.stop": { id: "Game.stop"; params: undefined };

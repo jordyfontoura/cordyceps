@@ -1,5 +1,5 @@
-import { emit } from "engine/utils/observer";
-import Aleatorizar from "engine/utils/random";
+import { emit } from "game/utils/observer";
+import Aleatorizar from "game/utils/random";
 import { Component } from "react";
 import "./debug.scss";
 

@@ -1,8 +1,9 @@
-import { GameObject } from "engine/core/gameobject";
-import { Tela } from "engine/core/tela";
-import Aleatorizar from "engine/utils/random";
-import Tempo from "engine/utils/time";
-import { Vetor } from "engine/utils/vetor";
+import { Aleatorizar, GameObject, Tela, Tempo, Vetor } from "engine";
+// import { GameObject } from "engine/gameobject";
+// import { Tela } from "engine/tela";
+// import Aleatorizar from "game/utils/random";
+// import Tempo from "game/utils/time";
+// import { Vetor } from "game/utils/vetor";
 
 const TempoDoRastro = 5;
 export  class Rastro extends GameObject {
