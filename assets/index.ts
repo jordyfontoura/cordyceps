@@ -11,7 +11,7 @@ const Assets: IAssets = {
     
   },
   configurações: {
-    fps: 60
+    fps: 15
   }
 };
 export default Assets;
