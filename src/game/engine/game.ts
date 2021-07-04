@@ -1,5 +1,6 @@
 /* eslint-disable no-fallthrough */
 import { emit } from "game/utils/observer";
+import { depth } from "game/utils/positions";
 import Tempo from "game/utils/time";
 import { GameObject } from "./gameobject";
 import { Cenário } from "./scene";
@@ -14,7 +15,7 @@ type IRotina =
       tipo: "rotina";
       executar: () => void;
     }
-    | {
+  | {
       tipo: "destruição";
       executar: () => void;
     };
@@ -124,7 +125,7 @@ export class GameEngine {
   private async loop() {
     while (this.status !== "parado") {
       if (this.status === "rodando") {
-        this.tick();
+        await this.tick();
       }
       this.render();
       await Tempo.esperar(1000 / this.fps);
@@ -134,12 +135,12 @@ export class GameEngine {
   private async encerrar() {
     console.log("Encerrando jogo...");
     this.gameObjects.map((o) => o.destruir(true));
-    
+
     this.gameObjects = [];
     console.log("Jogo encerrado");
   }
 
-  private tick() {
+  private async tick() {
     console.debug(
       `Tempo: ${Tempo.converter(this.ticks, "ticks", "segundos").toPrecision(
         2
@@ -154,17 +155,27 @@ export class GameEngine {
       }
       rotina.executar();
     }
-    const destrutores = this.rotinas.filter((rotina) => rotina.tipo === "destruição");
-    this.rotinas = this.rotinas.filter((rotina) => rotina.tipo !== "destruição");
+    const destrutores = this.rotinas.filter(
+      (rotina) => rotina.tipo === "destruição"
+    );
+    this.rotinas = this.rotinas.filter(
+      (rotina) => rotina.tipo !== "destruição"
+    );
     while (true) {
       const rotina: any = destrutores.pop();
       if (!rotina) {
         break;
       }
-      rotina.executar();
+      await rotina.executar();
     }
 
-    this.gameObjects.forEach((gameObject) => gameObject.tick?.());
+    this.gameObjects.forEach((gameObject) => {
+      depth(
+        gameObject,
+        (obj) => obj.filhos,
+        (obj) => obj.tick?.()
+      );
+    });
     this.ticks++;
   }
 
@@ -202,11 +213,12 @@ export class GameEngine {
     return gameObject;
   }
 
-  static async destruir<T extends GameObject>(gameObject: T, force: boolean=false): Promise<boolean>  {
+  static async destruir<T extends GameObject>(
+    gameObject: T,
+    force: boolean = false
+  ): Promise<boolean> {
     if (force) {
-      const index = Jogo.gameObjects.findIndex(
-        (o) => o.id === gameObject.id
-      );
+      const index = Jogo.gameObjects.findIndex((o) => o.id === gameObject.id);
       if (index < 0) {
         console.warn(
           `Falha ao destruir GameObject[${gameObject.id}]${
@@ -220,6 +232,9 @@ export class GameEngine {
       if (!gameObject.ignorarNaHierarquia) {
         emit("Game.hierarchy.remove", { gameObject });
       }
+      await Promise.all(
+        gameObject.filhos.map((filho) => filho.destruir(true))
+      );
       Jogo.gameObjects.splice(index, 1);
       console.debug(
         `GameObject[${gameObject.id}]${
@@ -233,7 +248,7 @@ export class GameEngine {
     return new Promise((resolve) => {
       Jogo.rotina({
         tipo: "destruição",
-        executar: () => {
+        executar: async () => {
           const index = Jogo.gameObjects.findIndex(
             (o) => o.id === gameObject.id
           );
@@ -248,6 +263,9 @@ export class GameEngine {
             return resolve(false);
           }
           gameObject.quandoDestruir?.();
+          await Promise.all(
+            gameObject.filhos.map((filho) => filho.destruir(true))
+          ).catch(() => resolve(false));
           if (!gameObject.ignorarNaHierarquia) {
             emit("Game.hierarchy.remove", { gameObject });
           }

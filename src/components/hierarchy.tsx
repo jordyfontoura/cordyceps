@@ -5,8 +5,9 @@ import { Component } from "react";
 import "./hierarchy.scss";
 
 type HierarchyNode = GameObject
-
+type IRegistro = string[];
 export class Hierarchy extends Component {
+  static registro: IRegistro = [];
   state: { id: number; trees: HierarchyNode[] };
   constructor(props: any) {
     super(props);

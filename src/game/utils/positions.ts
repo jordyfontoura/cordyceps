@@ -38,3 +38,17 @@ export function maiorDistância<T>(
   }
   return resultado;
 }
+
+export function depth<T, K=any>(
+  root: T,
+  extract: ((node: T) => T[]),
+  action: (node: T) => K
+): K[] {
+  let result: K[]=[];
+  const childrens = extract(root);
+  if (childrens.length) {
+    result = childrens.map(children=>depth<T,K>(children, extract, action)).flat(Infinity) as K[];
+  }
+  result.push(action(root));
+  return result;
+}

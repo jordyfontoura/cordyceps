@@ -8,5 +8,6 @@ function load(config: IGameConfig) {
   Events();
 
   Assets.carregar?.(Jogo);
+  return Jogo;
 }
 export default load;

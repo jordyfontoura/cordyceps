@@ -9,7 +9,7 @@ export abstract class GameObject {
   nome: string;
   zIndex: number = 0;
   pai?: GameObject;
-  filhos?: GameObject[];
+  filhos: GameObject[]=[];
   ignorarNaHierarquia: boolean = false;
 
   constructor(
@@ -35,5 +35,11 @@ export abstract class GameObject {
   quandoDestruir?(): void;
   destruir(force=false) {
     return GameEngine.destruir(this, force);
+  }
+  get posiçãoGlobal(): Vetor{
+    if (!this.pai) {
+      return this.posição;
+    }
+    return this.pai.posiçãoGlobal.add(this.posição);
   }
 }

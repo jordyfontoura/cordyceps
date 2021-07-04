@@ -2,10 +2,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "styles/index.scss";
 import App from "./App";
+import Events from "./events";
 import load from "./game/index";
 import reportWebVitals from "./reportWebVitals";
 
-load({fps: 120});
+Events(load({fps: 120}));
 ReactDOM.render(
   <React.StrictMode>
     <App />

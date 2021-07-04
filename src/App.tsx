@@ -6,6 +6,7 @@ import { GameBar } from "./components/gamebar";
 import { Hierarchy } from "./components/hierarchy";
 import { Painel, PainelSlot } from "./components/painel";
 
+
 function App() {
   return (
     <div id="App">
