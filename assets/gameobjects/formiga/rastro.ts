@@ -5,7 +5,7 @@ import { Aleatorizar, GameObject, Tela, Tempo, Vetor } from "engine";
 // import Tempo from "game/utils/time";
 // import { Vetor } from "game/utils/vetor";
 
-const TempoDoRastro = 5;
+const TempoDoRastro = 1;
 export  class Rastro extends GameObject {
   ticksDeVida: number;
   static rastros: Rastro[] = [];
