@@ -6,6 +6,7 @@ import { Formiga } from "../formiga/formiga";
 
 export class Comida extends GameObject {
   static comidasExistentes: Comida[] = [];
+  zIndex=2;
   caloria: number;
   constructor(posição: Vetor){
     super(posição);

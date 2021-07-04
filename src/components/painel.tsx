@@ -1,9 +1,22 @@
 import React, { Component } from "react";
 import "./painel.scss";
-
-export class PainelSlot extends Component {
+interface PainelSlotProps {
+  horizontal?: boolean;
+  ratio?: number;
+  painels: {
+    ratio?: number;
+    render: (props: any) => JSX.Element;
+  }[];
+}
+export class PainelSlot extends Component<PainelSlotProps> {
   render() {
-    return <div className="slot">{this.props.children}</div>;
+    return (
+      <div className={"slot" + (this.props.horizontal ? " horizontal" : "")} style={{flex: this.props.ratio || 1}}>
+        {this.props.painels.map((painel, key) =>
+          painel.render({ ratio: painel.ratio || 1, key })
+        )}
+      </div>
+    );
   }
 }
 
@@ -12,6 +25,7 @@ interface Props {
     name: string;
     element: (props?: any) => JSX.Element;
   }[];
+  ratio?: number;
 }
 
 export class Painel extends Component<Props> {
@@ -23,7 +37,7 @@ export class Painel extends Component<Props> {
   }
   render() {
     return (
-      <div className="painel">
+      <div className="painel" style={{ flex: this.props.ratio || 1 }}>
         <ul className="abas">
           {this.props.pages.map((page, id) => (
             <li

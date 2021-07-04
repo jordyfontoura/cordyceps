@@ -1,3 +1,4 @@
+import { debug } from "engine/core/debug";
 import { Jogo } from "engine/core/game";
 import { GameObject } from "engine/core/gameobject";
 import { Tela } from "engine/core/tela";
@@ -15,7 +16,7 @@ export class Formiga extends GameObject {
   constructor(posição: Vetor) {
     super(posição);
     const tempoEstimado = Aleatorizar.Int(0, 30);
-    console.log(`Formiga criada ${tempoEstimado}`);
+    debug(`Formiga criada ${tempoEstimado}`);
     this.calorias = Tempo.converter(
       tempoEstimado,
       "segundos",
@@ -25,6 +26,7 @@ export class Formiga extends GameObject {
     Tempo.startCooldown(this.id, 10000);
   }
   quandoDestruir() {
+    debug(`Formiga[${this.id}] destruida`);
     new RestosMortais(this.posição);
   }
 
@@ -81,7 +83,7 @@ export class Formiga extends GameObject {
   }
   comer(comida: Comida) {
     Tempo.startCooldown(this.id, 10000);
-    console.log(`Eu ${this.id} comi ${comida.id} que tinha ${comida.caloria} calorias`);
+    debug(`Eu ${this.nome} comi ${comida.nome} que tinha ${comida.caloria} calorias`);
     comida.alimentar(this);
   }
   render(tela: Tela) {

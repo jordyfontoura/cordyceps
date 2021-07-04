@@ -9,7 +9,7 @@ export  class Rastro extends GameObject {
   ticksDeVida: number;
   static rastros: Rastro[] = [];
   private constructor(posição: Vetor) {
-    super(posição);
+    super(posição, {ignorarNaHierarquia: true});
     this.ticksDeVida = Tempo.converter(TempoDoRastro, "segundos", "ticks");
     Rastro.rastros.push(this);
   }

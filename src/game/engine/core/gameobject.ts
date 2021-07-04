@@ -6,25 +6,34 @@ import { Tela } from "./tela";
 export abstract class GameObject {
   id: number;
   posição: Vetor;
-  name: string;
+  nome: string;
   zIndex: number = 0;
+  pai?: GameObject;
+  filhos?: GameObject[];
+  ignorarNaHierarquia: boolean = false;
 
-  constructor(position: Vetor = Vetor.Zero) {
+  constructor(
+    position: Vetor = Vetor.Zero,
+    opções: {ignorarNaHierarquia?: boolean} = {}
+  ) {
     if (!Jogo) {
       throw new Error(
         "Você deve criar uma instância de GameEngine primeiro. Tente usar GameEngine.novo() antes de criar objetos do jogo."
       );
     }
     this.id = Aleatorizar.Id();
-    this.name = this.id.toString();
+    this.nome = this.id.toString();
     this.posição = position;
+    if (opções.ignorarNaHierarquia) {
+      this.ignorarNaHierarquia = true;
+    }
     GameEngine.instanciar(this);
   }
   despertar?(): void;
   tick?(): void;
   render?(tela: Tela): void;
   quandoDestruir?(): void;
-  destruir() {
-    return GameEngine.destruir(this);
+  destruir(force=false) {
+    return GameEngine.destruir(this, force);
   }
 }

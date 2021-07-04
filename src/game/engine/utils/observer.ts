@@ -9,7 +9,7 @@ const middlewares: {
   [K in string]: ((args: Ks<K>)=>any)[]
 } = {};
 export function emit<T extends keyof IObserversTypes>(id :T, params: IObserversTypes[T]['params']) {
-  console.info(`Emit: ${id} Payload: ${JSON.stringify(params)}`)
+  console.debug(`Emit: ${id} Payload: ${JSON.stringify(params)}`)
   if (id in middlewares || middlewares[id]) {
     return middlewares[id].map(fn=>{
       try {
@@ -29,6 +29,7 @@ export function listen<T extends keyof IObserversTypes>(id: T, value: (args: IOb
   if (!middlewares[id].includes(value as (args: {id: string, params: any})=>void)) {
     middlewares[id].push(value as (args: {id: string, params: any})=>void);
   }
+  return middlewares[id].length - 1;
 }
 
 const Subject = {

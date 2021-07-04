@@ -1,0 +1,16 @@
+.hierarchy{
+  .nodes{
+    .node{
+      align-items: baseline;
+      display: flex;
+      font-family: system-ui;
+      .identifier{
+        font-size: 8px;
+        margin-right: 1ch;
+      }
+      .name{
+        font-size: 10px;
+      }
+    }
+  }
+}

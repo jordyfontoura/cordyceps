@@ -13,12 +13,16 @@ const Aleatorizar = {
   Item(lista: any[]) {
     return lista[Aleatorizar.Int(0, lista.length)];
   },
-  ids: [] as number[],
-  Id(): number {
+  ids: {'default': []} as Record<string, number[]>,
+  Id(group: string='default'): number {
     let id;
+    if (!(group in this.ids)) {
+      this.ids[group] = [];
+    }
     do {
       id = Aleatorizar.Int(1000000, 1000000 * 10);
-    } while (this.ids.includes(id));
+    } while (this.ids[group].includes(id));
+    this.ids[group].push(id);
     return id;
   },
   Direção() {

@@ -2,50 +2,55 @@ import { Vetor } from "../utils/vetor";
 import { IGameConfig } from "./game";
 
 export class Tela {
-  id: string;
+  id: number;
   centro: Vetor;
   largura: number;
   altura: number;
   configurações: IGameConfig;
+  posição: Vetor;
   private tela: CanvasRenderingContext2D;
-  constructor(private canvas: HTMLCanvasElement, config: IGameConfig) {
-    this.id = canvas.id;
+  static telas: Tela[]=[];
+  constructor(id: number, private canvas: HTMLCanvasElement, config: IGameConfig) {
+    this.id = id;
     this.tela = canvas.getContext("2d") as CanvasRenderingContext2D;
     this.largura = this.tela.canvas.width;
     this.altura = this.tela.canvas.height;
     this.centro = new Vetor(this.largura, this.altura).div(2);
     this.configurações = config;
+    this.posição = Vetor.Zero;
 
     this.ajustarTela();
     
 
     this.tela.imageSmoothingEnabled = false;
-    window.addEventListener(
+    this.canvas.addEventListener(
       "resize",
       (e) => {
-        this.ajustarTela();
+        if (this.canvas) {
+          this.ajustarTela();
+        }
       },
       false
     );
+    Tela.telas.push(this);
   }
   ajustarTela() {
     this.tela.imageSmoothingEnabled = false;
-    if (this.configurações.altura) {
-      this.canvas.height = this.configurações.altura;
-    }else{
-      this.canvas.height = this.canvas.clientHeight;
-    }
-    if (this.configurações.largura) {
-      this.canvas.width = this.configurações.largura;
-    }else{
-      this.canvas.width = this.canvas.clientWidth;
-    }
+    this.canvas.height = this.canvas.clientHeight;
+    this.canvas.width = this.canvas.clientWidth;
     this.largura = this.tela.canvas.width;
     this.altura = this.tela.canvas.height;
     this.centro = new Vetor(this.largura, this.altura).div(2);
   }
   toLocalPosition(posição: Vetor) {
-    return new Vetor(posição.x, -posição.y).add(this.centro);
+    return new Vetor(posição.x, -posição.y).add(this.centro).sub(this.posição.mul(new Vetor(1, -1)));
+  }
+  mover(posição: Vetor, deslocarApenas=false){
+    if (deslocarApenas) {
+      this.posição = this.posição.add(posição);
+    }else{
+      this.posição = posição;
+    }
   }
   setPixel(posição: Vetor, cor: string) {
     let pos = this.toLocalPosition(posição);

@@ -1,4 +1,5 @@
 /* eslint-disable no-fallthrough */
+import { emit } from "engine/utils/observer";
 import Tempo from "../utils/time";
 import { GameObject } from "./gameobject";
 import { Cenário } from "./scene";
@@ -12,28 +13,16 @@ type IRotina =
   | {
       tipo: "rotina";
       executar: () => void;
+    }
+    | {
+      tipo: "destruição";
+      executar: () => void;
     };
 
 export interface IGameConfig {
   largura?: number;
   altura?: number;
   fps: number;
-}
-declare global {
-  interface IObserversTypes {
-    "Game.stop": { id: "Game.stop"; params: undefined };
-    "Game.play": { id: "Game.play"; params: undefined };
-    "Game.pause": { id: "Game.pause"; params: undefined };
-    "Game.render": { id: "Game.render"; params: { executar: () => void } };
-    "Game.criar.display": {
-      id: "Game.criar.display";
-      params: { element: string };
-    };
-    "Game.deletar.display": {
-      id: "Game.criar.display";
-      params: { element: string };
-    };
-  }
 }
 
 export let Jogo: GameEngine;
@@ -80,13 +69,6 @@ export class GameEngine {
       case "acordando":
         if (this.status === "parado") {
           console.log("Reiniciando jogo...");
-          this.gameObjects.map((o) => o.destruir())
-          this.rotinas.forEach(rotina => {
-            if (rotina.tipo === 'rotina') {
-              rotina.executar()
-            }
-          })
-          this.gameObjects = [];
         }
         this.status = "rodando";
         console.log(`Jogo iniciado!`);
@@ -118,15 +100,15 @@ export class GameEngine {
     cenário.carregar(this);
     console.log(`Cenário '${cenário.nome}' carregado com sucesso!`);
   }
-  novaTela(id: string) {
-    const canvas = document.getElementById(id) as HTMLCanvasElement;
+  novaTela(id: number) {
+    const canvas = document.getElementById(id.toString()) as HTMLCanvasElement;
     const ctx = canvas.getContext("2d");
     if (ctx === null) {
       throw new Error("canvas.getContext('2d') não encontrado");
     }
-    this.telas.push(new Tela(canvas, this.configurações));
+    this.telas.push(new Tela(id, canvas, this.configurações));
   }
-  deletarTela(id: string) {
+  deletarTela(id: number) {
     const index = this.telas.findIndex((tela) => tela.id === id);
     if (index < 0) {
       return;
@@ -147,6 +129,14 @@ export class GameEngine {
       this.render();
       await Tempo.esperar(1000 / this.fps);
     }
+    await this.encerrar();
+  }
+  private async encerrar() {
+    console.log("Encerrando jogo...");
+    this.gameObjects.map((o) => o.destruir(true));
+    
+    this.gameObjects = [];
+    console.log("Jogo encerrado");
   }
 
   private tick() {
@@ -158,13 +148,20 @@ export class GameEngine {
     const rotinas = this.rotinas.filter((rotina) => rotina.tipo === "rotina");
     this.rotinas = this.rotinas.filter((rotina) => rotina.tipo !== "rotina");
     while (true) {
-      const rotina = rotinas.pop();
+      const rotina: any = rotinas.pop();
       if (!rotina) {
         break;
       }
-      if (rotina.tipo === "rotina") {
-        rotina.executar();
+      rotina.executar();
+    }
+    const destrutores = this.rotinas.filter((rotina) => rotina.tipo === "destruição");
+    this.rotinas = this.rotinas.filter((rotina) => rotina.tipo !== "destruição");
+    while (true) {
+      const rotina: any = destrutores.pop();
+      if (!rotina) {
+        break;
       }
+      rotina.executar();
     }
 
     this.gameObjects.forEach((gameObject) => gameObject.tick?.());
@@ -185,7 +182,9 @@ export class GameEngine {
           rotina.executar(tela);
         }
       }
-      this.gameObjects.sort((a, b)=> a.zIndex - b.zIndex).forEach((gameObject) => gameObject.render?.(tela));
+      this.gameObjects
+        .sort((a, b) => a.zIndex - b.zIndex)
+        .forEach((gameObject) => gameObject.render?.(tela));
     });
   }
 
@@ -197,13 +196,43 @@ export class GameEngine {
         executar: gameObject.despertar,
       });
     }
+    if (!gameObject.ignorarNaHierarquia) {
+      emit("Game.hierarchy.add", { gameObject });
+    }
     return gameObject;
   }
 
-  static async destruir<T extends GameObject>(gameObject: T): Promise<boolean> {
+  static async destruir<T extends GameObject>(gameObject: T, force: boolean=false): Promise<boolean>  {
+    if (force) {
+      const index = Jogo.gameObjects.findIndex(
+        (o) => o.id === gameObject.id
+      );
+      if (index < 0) {
+        console.warn(
+          `Falha ao destruir GameObject[${gameObject.id}]${
+            gameObject.nome !== gameObject.id.toString()
+              ? " '" + gameObject.nome + "'"
+              : ""
+          }`
+        );
+        return false;
+      }
+      if (!gameObject.ignorarNaHierarquia) {
+        emit("Game.hierarchy.remove", { gameObject });
+      }
+      Jogo.gameObjects.splice(index, 1);
+      console.debug(
+        `GameObject[${gameObject.id}]${
+          gameObject.nome !== gameObject.id.toString()
+            ? " '" + gameObject.nome + "'"
+            : ""
+        } destruido`
+      );
+      return true;
+    }
     return new Promise((resolve) => {
       Jogo.rotina({
-        tipo: "rotina",
+        tipo: "destruição",
         executar: () => {
           const index = Jogo.gameObjects.findIndex(
             (o) => o.id === gameObject.id
@@ -211,19 +240,22 @@ export class GameEngine {
           if (index < 0) {
             console.warn(
               `Falha ao destruir GameObject[${gameObject.id}]${
-                gameObject.name !== gameObject.id.toString()
-                  ? " '" + gameObject.name + "'"
+                gameObject.nome !== gameObject.id.toString()
+                  ? " '" + gameObject.nome + "'"
                   : ""
               }`
             );
             return resolve(false);
           }
           gameObject.quandoDestruir?.();
+          if (!gameObject.ignorarNaHierarquia) {
+            emit("Game.hierarchy.remove", { gameObject });
+          }
           Jogo.gameObjects.splice(index, 1);
           console.debug(
             `GameObject[${gameObject.id}]${
-              gameObject.name !== gameObject.id.toString()
-                ? " '" + gameObject.name + "'"
+              gameObject.nome !== gameObject.id.toString()
+                ? " '" + gameObject.nome + "'"
                 : ""
             } destruido`
           );
