@@ -1,6 +1,6 @@
 import {
   Aleatorizar,
-  Color,
+  Cor,
   debug,
   GameObject,
   Jogo,
@@ -9,12 +9,6 @@ import {
   Vetor
 } from "engine";
 import { interpolar, mapearValor } from "game/utils/math";
-// import { Jogo } from "engine/game";
-// import { GameObject } from "engine/gameobject";
-// import { Tela } from "engine/tela";
-// import Aleatorizar from "game/utils/random";
-// import Tempo from "game/utils/time";
-// import { Vetor } from "game/utils/vetor";
 import { Comida } from "../comida/comida";
 import { Rastro } from "./rastro";
 import { RestosMortais } from "./restormortais";
@@ -100,6 +94,6 @@ export class Formiga extends GameObject {
       [128, 0, 0],
       [0, 0, 0]
     );
-    tela.setPixel(this.posição, new Color(values[0], values[1], values[2]).toHex());
+    tela.setPixel(this.posição, new Cor(values[0], values[1], values[2]).toHex());
   }
 }

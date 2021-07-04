@@ -54,49 +54,49 @@ declare global {
 }
 
 export default function Events() {
-  Subject.listen("Game.play", () => {
+  Subject.escutar("Game.play", () => {
     Jogo.iniciar();
   });
-  Subject.listen("Game.pause", () => {
+  Subject.escutar("Game.pause", () => {
     Jogo.pausar();
   });
-  Subject.listen("Game.stop", () => {
+  Subject.escutar("Game.stop", () => {
     Jogo.parar();
   });
-  Subject.listen("Game.criar.display", (params) => {
+  Subject.escutar("Game.criar.display", (params) => {
     Jogo.novaTela(params.id);
   });
-  Subject.listen("Game.deletar.display", (params) => {
+  Subject.escutar("Game.deletar.display", (params) => {
     Jogo.deletarTela(params.id);
   });
-  // Subject.listen("Game.criar.debug", (params) => {
+  // Subject.escutar("Game.criar.debug", (params) => {
   //   const id = createDebug(params.debug);
-  //   Subject.listen("Game.deletar.debug", () => {
+  //   Subject.escutar("Game.deletar.debug", () => {
   //     deleteDebug(id);
   //   });
   // });
-  Subject.listen("Game.criar.hierarchy", (params) => {
-    Subject.listen("Game.hierarchy.add", ({ gameObject }) => {
+  Subject.escutar("Game.criar.hierarchy", (params) => {
+    Subject.escutar("Game.hierarchy.add", ({ gameObject }) => {
       params.add(gameObject);
     });
-    Subject.listen("Game.hierarchy.remove", ({ gameObject }) => {
+    Subject.escutar("Game.hierarchy.remove", ({ gameObject }) => {
       params.remove(gameObject);
     });
   });
-  Subject.listen("Game.hierarchy.add", (payload) => {
-    Subject.emit("Editor.hierarchy.add", payload);
+  Subject.escutar("Game.hierarchy.add", (payload) => {
+    Subject.emitir("Editor.hierarchy.add", payload);
   });
-  Subject.listen("Game.hierarchy.remove", (payload) => {
-    Subject.emit("Editor.hierarchy.remove", payload);
+  Subject.escutar("Game.hierarchy.remove", (payload) => {
+    Subject.emitir("Editor.hierarchy.remove", payload);
   });
-  Subject.listen("Game.display.move", (params) => {
+  Subject.escutar("Game.display.move", (params) => {
     const tela = Tela.telas.find((item) => item.id === params.id);
     if (!tela) {
       return;
     }
     tela.mover(params.delta, true);
   });
-  Subject.listen("Editor.display.zoom", (payload)=>{
+  Subject.escutar("Editor.display.zoom", (payload)=>{
     Tela.telas.forEach(tela=>{
       if (tela.id === payload.id) {
         tela.zoom(payload.delta)

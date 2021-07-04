@@ -1,4 +1,4 @@
-import { clamp } from "game/utils/math";
+import { restringir } from "game/utils/math";
 import { Vetor } from "game/utils/vetor";
 import { IGameConfig } from "./game";
 
@@ -72,6 +72,6 @@ export class Tela {
     this.tela.clearRect(0, 0, this.largura, this.altura);
   }
   zoom(delta: number) {
-    this.zoomValor = clamp(this.zoomValor - delta * 0.01, 0, 20);
+    this.zoomValor = restringir(this.zoomValor - delta * 0.01, 0, 20);
   }
 }

@@ -1,7 +1,12 @@
-export { Color } from "game/utils/color";
-export * as Math from "game/utils/math";
-export { emit, listen } from "game/utils/observer";
-export * as Positions from "game/utils/positions";
+export { Cor } from "game/utils/color";
+export {
+  distribuir,
+  interpolar,
+  mapearValor,
+  média, restringir, somatorio
+} from "game/utils/math";
+export { emitir, escutar } from "game/utils/observer";
+export * as Posições from "game/utils/positions";
 export { default as Aleatorizar } from "game/utils/random";
 export { Retangulo } from "game/utils/retangulo";
 export { default as Tempo } from "game/utils/time";

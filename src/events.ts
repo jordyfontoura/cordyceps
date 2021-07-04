@@ -4,11 +4,11 @@ import Editor from "./editor";
 
 export function Events(jogo: GameEngine) {
   
-  Subject.listen("Editor.hierarchy.add", ({ gameObject }) => {
+  Subject.escutar("Editor.hierarchy.add", ({ gameObject }) => {
     Editor.hierarquia.push(gameObject);
     Editor.update('hierarquia');
   });
-  Subject.listen("Editor.hierarchy.remove", ({ gameObject }) => {
+  Subject.escutar("Editor.hierarchy.remove", ({ gameObject }) => {
     const index = Editor.hierarquia.findIndex((go) => go.id === gameObject.id);
     if (index < 0) {
       return;
@@ -16,7 +16,7 @@ export function Events(jogo: GameEngine) {
     Editor.hierarquia.splice(index, 1);
     Editor.update('hierarquia');
   });
-  Subject.listen("Editor.registro.add", (registro)=>{
+  Subject.escutar("Editor.registro.add", (registro)=>{
     Editor.registros.push(registro);
     Editor.update('registros');
   })

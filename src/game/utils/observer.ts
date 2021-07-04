@@ -16,7 +16,7 @@ let observers: {
   [K in string]: { [ID in number]: IExecutor };
 } = {};
 
-export function emit<T extends keyof IObserversTypes>(
+export function emitir<T extends keyof IObserversTypes>(
   signal: T,
   payload?: ISubjectPayload<T>
 ) {
@@ -28,7 +28,7 @@ export function emit<T extends keyof IObserversTypes>(
     }
   }
 }
-export function listen<T extends keyof IObserversTypes>(
+export function escutar<T extends keyof IObserversTypes>(
   signal: T,
   listen: (payload: ISubjectPayload<T> & ISubjectBasePayload) => void,
   id: number = Aleatorizar.Id("observers")
@@ -91,8 +91,8 @@ export function unlisten<T extends keyof IObserversTypes>(
 // }
 
 const Subject = {
-  emit,
-  listen,
+  emitir,
+  escutar,
   unlisten
 };
 export default Subject;

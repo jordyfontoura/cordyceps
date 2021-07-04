@@ -1,4 +1,3 @@
-import { emit } from "engine";
 
 // const debuggers: {
 //   id: number;
@@ -24,6 +23,8 @@ import { emit } from "engine";
 //   debuggers.splice(index, 1)
 // }
 
+import { emitir } from "engine";
+
 export function debug(mensagem: string) {
-  emit("Editor.registro.add", { mensagem });
+  emitir("Editor.registro.add", { mensagem });
 }

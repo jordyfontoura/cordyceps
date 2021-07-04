@@ -1,5 +1,5 @@
 /* eslint-disable no-fallthrough */
-import { emit } from "game/utils/observer";
+import { emitir } from "game/utils/observer";
 import { depth } from "game/utils/positions";
 import Tempo from "game/utils/time";
 import { GameObject } from "./gameobject";
@@ -208,7 +208,7 @@ export class GameEngine {
       });
     }
     if (!gameObject.ignorarNaHierarquia) {
-      emit("Game.hierarchy.add", { gameObject });
+      emitir("Game.hierarchy.add", { gameObject });
     }
     return gameObject;
   }
@@ -230,7 +230,7 @@ export class GameEngine {
         return false;
       }
       if (!gameObject.ignorarNaHierarquia) {
-        emit("Game.hierarchy.remove", { gameObject });
+        emitir("Game.hierarchy.remove", { gameObject });
       }
       await Promise.all(
         gameObject.filhos.map((filho) => filho.destruir(true))
@@ -267,7 +267,7 @@ export class GameEngine {
             gameObject.filhos.map((filho) => filho.destruir(true))
           ).catch(() => resolve(false));
           if (!gameObject.ignorarNaHierarquia) {
-            emit("Game.hierarchy.remove", { gameObject });
+            emitir("Game.hierarchy.remove", { gameObject });
           }
           Jogo.gameObjects.splice(index, 1);
           console.debug(

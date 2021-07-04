@@ -1,6 +1,6 @@
 import { interpolar } from "./math";
 
-export class Color extends Array {
+export class Cor extends Array {
   constructor(r: number, g: number, b: number, a = 255) {
     super();
     this.push(r, g, b, a);
@@ -51,7 +51,7 @@ export class Color extends Array {
   set hue(value) {
     let hsv = this.toHsv();
     hsv[0] = value;
-    let newColor = Color.fromHsv(hsv[0], hsv[1], hsv[2]);
+    let newColor = Cor.fromHsv(hsv[0], hsv[1], hsv[2]);
     for (let i = 0; i < this.length; i++) this[i] = newColor[i];
   }
   get saturationV() {
@@ -62,7 +62,7 @@ export class Color extends Array {
   set saturationV(value) {
     let hsv = this.toHsv();
     hsv[1] = value;
-    let newColor = Color.fromHsv(hsv[0], hsv[1], hsv[2]);
+    let newColor = Cor.fromHsv(hsv[0], hsv[1], hsv[2]);
     for (let i = 0; i < this.length; i++) this[i] = newColor[i];
   }
   get saturationL() {
@@ -74,7 +74,7 @@ export class Color extends Array {
   set saturationL(value) {
     let hsl = this.toHsl();
     hsl[1] = value;
-    let newColor = Color.fromHsv(hsl[0], hsl[1], hsl[2]);
+    let newColor = Cor.fromHsv(hsl[0], hsl[1], hsl[2]);
     for (let i = 0; i < this.length; i++) this[i] = newColor[i];
   }
   get lightness() {
@@ -87,7 +87,7 @@ export class Color extends Array {
   set lightness(value) {
     let hsl = this.toHsl();
     hsl[2] = value;
-    let newColor = Color.fromHsv(hsl[0], hsl[1], hsl[2]);
+    let newColor = Cor.fromHsv(hsl[0], hsl[1], hsl[2]);
     for (let i = 0; i < this.length; i++) this[i] = newColor[i];
   }
   get value() {
@@ -96,7 +96,7 @@ export class Color extends Array {
   set value(value) {
     let hsv = this.toHsv();
     hsv[2] = value;
-    let newColor = Color.fromHsv(hsv[0], hsv[1], hsv[2]);
+    let newColor = Cor.fromHsv(hsv[0], hsv[1], hsv[2]);
     for (let i = 0; i < this.length; i++) this[i] = newColor[i];
   }
   toHsv(passAlpha = false) {
@@ -140,16 +140,16 @@ export class Color extends Array {
     );
   }
 
-  static Lerp(delta: number, inicio: any, fim: any, ...args: any[]):Color|Color[] {
+  static Lerp(delta: number, inicio: any, fim: any, ...args: any[]):Cor|Cor[] {
     let res = interpolar(delta, inicio, fim, ...args) as any[];
     if (res.length !== undefined) {
       let cores = [];
       for (let i = 0; i < res.length; i++) {
-        cores.push(new Color(res[i][0], res[i][1], res[i][2], res[i][3]));
+        cores.push(new Cor(res[i][0], res[i][1], res[i][2], res[i][3]));
       }
       return cores;
     }
-    return new Color(res[0], res[1], res[2], res[3]);
+    return new Cor(res[0], res[1], res[2], res[3]);
   }
   static fromCMYK(c: number, m: number, y: number, k: number) {
     c = c * (1 - k) + k;
@@ -206,7 +206,7 @@ export class Color extends Array {
         break;
     }
 
-    return new Color(r * 255, g * 255, b * 255);
+    return new Cor(r * 255, g * 255, b * 255);
   }
   static fromHsl(h: number, s: number, l: number) {
     let r, g, b;
@@ -222,7 +222,7 @@ export class Color extends Array {
       b = hue2rgb(p, q, h - 1 / 3);
     }
 
-    return new Color(r * 255, g * 255, b * 255);
+    return new Cor(r * 255, g * 255, b * 255);
   }
   static fromHex(hex: string) {
     let res = [];
@@ -243,7 +243,7 @@ export class Color extends Array {
     return res;
   }
   static random(randomAlpha = false) {
-    return new Color(
+    return new Cor(
       Math.random() * 255,
       Math.random() * 255,
       Math.random() * 255,

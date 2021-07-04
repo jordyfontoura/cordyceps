@@ -23,7 +23,7 @@ export class Hierarchy extends Component {
       this.setState({ trees: editor.hierarquia });
     });
 
-    // emit("Game.criar.hierarchy", {
+    // emitir("Game.criar.hierarchy", {
     //   id: this.state.id,
     //   add: (go: GameObject) => {
     //     if (!go.pai) {
@@ -44,7 +44,7 @@ export class Hierarchy extends Component {
   }
   componentWillUnmount() {
     Editor.unlisten('hierarquia', this.editorId);
-    // emit("Game.deletar.hierarchy", { id: this.state.id });
+    // emitir("Game.deletar.hierarchy", { id: this.state.id });
   }
   render() {
     return (

@@ -20,7 +20,7 @@ export class Debug extends Component {
         register: editor.registros.map((r) => r.mensagem).reverse(),
       });
     });
-    // emit("Game.criar.debug", {
+    // emitir("Game.criar.debug", {
     //   id: this.state.id,
     //   debug: (mensagem: string) => {
     //     this.setState({ register: [mensagem, ...this.state.register] });
@@ -29,7 +29,7 @@ export class Debug extends Component {
   }
   componentWillUnmount() {
     Editor.unlisten("registros", this.editorId);
-    // emit("Game.deletar.debug", { id: this.state.id });
+    // emitir("Game.deletar.debug", { id: this.state.id });
   }
   render() {
     return (
