@@ -23,10 +23,6 @@ function App() {
                     name: "display",
                     element: () => <Display />,
                   },
-                  {
-                    name: "display",
-                    element: () => <Display />,
-                  },
                 ]}
               />
             ),
@@ -62,6 +58,10 @@ function App() {
                           {
                             name: "Console",
                             element: () => <Debug/>,
+                          },
+                          {
+                            name: "display",
+                            element: () => <Display />,
                           },
                         ]}
                       />

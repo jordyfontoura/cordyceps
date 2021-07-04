@@ -1,43 +1,50 @@
 import { GameObject } from "engine/gameobject";
-import { emit } from "game/utils/observer";
 import Aleatorizar from "game/utils/random";
 import { Component } from "react";
+import Editor from "src/editor";
 import "./hierarchy.scss";
 
-type HierarchyNode = GameObject
+type HierarchyNode = GameObject;
 type IRegistro = string[];
 export class Hierarchy extends Component {
   static registro: IRegistro = [];
   state: { id: number; trees: HierarchyNode[] };
+  editorId: number;
   constructor(props: any) {
     super(props);
     this.state = {
       id: Aleatorizar.Id(),
-      trees: [],
+      trees: Editor.hierarquia||[],
     };
+    this.editorId = this.state.id;
   }
   componentDidMount() {
-    emit("Game.criar.hierarchy", {
-      id: this.state.id,
-      add: (go: GameObject) => {
-        if (!go.pai) {
-          this.state.trees.push(go);
-          this.setState({ trees: [...this.state.trees, go] });
-        }
-      },
-      remove: (go: GameObject) => {
-        const index = this.state.trees.findIndex((item) => item.id === go.id);
-        if (index < 0) {
-          return;
-        }
-        this.state.trees.splice(index, 1);
-        this.setState({ trees: [...this.state.trees] });
-      },
-      update: (go: GameObject) => {},
+    this.editorId = Editor.listen("hierarquia", (editor) => {
+      this.setState({ trees: editor.hierarquia });
     });
+
+    // emit("Game.criar.hierarchy", {
+    //   id: this.state.id,
+    //   add: (go: GameObject) => {
+    //     if (!go.pai) {
+    //       this.state.trees.push(go);
+    //       this.setState({ trees: [...this.state.trees, go] });
+    //     }
+    //   },
+    //   remove: (go: GameObject) => {
+    //     const index = this.state.trees.findIndex((item) => item.id === go.id);
+    //     if (index < 0) {
+    //       return;
+    //     }
+    //     this.state.trees.splice(index, 1);
+    //     this.setState({ trees: [...this.state.trees] });
+    //   },
+    //   update: (go: GameObject) => {},
+    // });
   }
   componentWillUnmount() {
-    emit("Game.deletar.hierarchy", { id: this.state.id });
+    Editor.unlisten('hierarquia', this.editorId);
+    // emit("Game.deletar.hierarchy", { id: this.state.id });
   }
   render() {
     return (
@@ -49,9 +56,7 @@ export class Hierarchy extends Component {
                 [{node.nome !== node.id.toString() && <span>{node.id}:</span>}
                 <span>{node.constructor.name}</span>]
               </span>
-              <span>
-                {<span className="name">{node.nome}</span>}
-              </span>
+              <span>{<span className="name">{node.nome}</span>}</span>
             </li>
           ))}
         </ul>

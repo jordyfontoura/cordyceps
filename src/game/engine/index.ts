@@ -1,3 +1,4 @@
+export { Color } from "game/utils/color";
 export * as Math from "game/utils/math";
 export { emit, listen } from "game/utils/observer";
 export * as Positions from "game/utils/positions";
@@ -11,6 +12,7 @@ export type { IGameConfig } from "./game";
 export { GameObject } from "./gameobject";
 export { Cenário } from "./scene";
 export { Tela } from "./tela";
+
 // const Commons = {
 //   Vetor,
 //   GameObject,

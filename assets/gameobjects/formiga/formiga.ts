@@ -1,4 +1,14 @@
-import { Aleatorizar, debug, GameObject, Jogo, Tela, Tempo, Vetor } from "engine";
+import {
+  Aleatorizar,
+  Color,
+  debug,
+  GameObject,
+  Jogo,
+  Tela,
+  Tempo,
+  Vetor
+} from "engine";
+import { interpolar, mapearValor } from "game/utils/math";
 // import { Jogo } from "engine/game";
 // import { GameObject } from "engine/gameobject";
 // import { Tela } from "engine/tela";
@@ -85,6 +95,11 @@ export class Formiga extends GameObject {
     comida.alimentar(this);
   }
   render(tela: Tela) {
-    tela.setPixel(this.posição, "black");
+    let values = interpolar(
+      mapearValor(this.calorias, 0, this.caloriasMaxima, 0, 1) || 1,
+      [128, 0, 0],
+      [0, 0, 0]
+    );
+    tela.setPixel(this.posição, new Color(values[0], values[1], values[2]).toHex());
   }
 }

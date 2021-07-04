@@ -144,7 +144,7 @@ export class GameEngine {
     console.debug(
       `Tempo: ${Tempo.converter(this.ticks, "ticks", "segundos").toPrecision(
         2
-      )} ` + `Tick: ${this.ticks}`
+      )} Tick: ${this.ticks}`
     );
     const rotinas = this.rotinas.filter((rotina) => rotina.tipo === "rotina");
     this.rotinas = this.rotinas.filter((rotina) => rotina.tipo !== "rotina");

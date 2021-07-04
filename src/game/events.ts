@@ -1,9 +1,9 @@
-import { createDebug, deleteDebug } from "engine/debug";
 import { Jogo } from "engine/game";
 import { GameObject } from "engine/gameobject";
 import { Tela } from "engine/tela";
 import Subject from "game/utils/observer";
 import { Vetor } from "game/utils/vetor";
+import { IRegistro } from "src/editor";
 declare global {
   interface IObserversTypes {
     "Game.stop": {};
@@ -44,10 +44,12 @@ declare global {
     };
     "Editor.hierarchy.add": {
       gameObject: GameObject;
-    }
+    };
     "Editor.hierarchy.remove": {
       gameObject: GameObject;
-    }
+    };
+    "Editor.registro.add": IRegistro;
+    "Editor.display.zoom": {id: number, delta: number}
   }
 }
 
@@ -67,12 +69,12 @@ export default function Events() {
   Subject.listen("Game.deletar.display", (params) => {
     Jogo.deletarTela(params.id);
   });
-  Subject.listen("Game.criar.debug", (params) => {
-    const id = createDebug(params.debug);
-    Subject.listen("Game.deletar.debug", () => {
-      deleteDebug(id);
-    });
-  });
+  // Subject.listen("Game.criar.debug", (params) => {
+  //   const id = createDebug(params.debug);
+  //   Subject.listen("Game.deletar.debug", () => {
+  //     deleteDebug(id);
+  //   });
+  // });
   Subject.listen("Game.criar.hierarchy", (params) => {
     Subject.listen("Game.hierarchy.add", ({ gameObject }) => {
       params.add(gameObject);
@@ -82,10 +84,10 @@ export default function Events() {
     });
   });
   Subject.listen("Game.hierarchy.add", (payload) => {
-    Subject.emit("Editor.hierarchy.add", payload)
+    Subject.emit("Editor.hierarchy.add", payload);
   });
   Subject.listen("Game.hierarchy.remove", (payload) => {
-    Subject.emit("Editor.hierarchy.remove", payload)
+    Subject.emit("Editor.hierarchy.remove", payload);
   });
   Subject.listen("Game.display.move", (params) => {
     const tela = Tela.telas.find((item) => item.id === params.id);
@@ -94,4 +96,11 @@ export default function Events() {
     }
     tela.mover(params.delta, true);
   });
+  Subject.listen("Editor.display.zoom", (payload)=>{
+    Tela.telas.forEach(tela=>{
+      if (tela.id === payload.id) {
+        tela.zoom(payload.delta)
+      }
+    });
+  })
 }
