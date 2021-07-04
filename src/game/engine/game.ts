@@ -137,6 +137,7 @@ export class GameEngine {
     this.gameObjects.map((o) => o.destruir(true));
 
     this.gameObjects = [];
+    this.telas.forEach(tela=>tela.limparTela());
     console.log("Jogo encerrado");
   }
 
