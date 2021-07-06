@@ -1,4 +1,4 @@
-import { Cenário } from "engine";
+import { Cenário } from "game/core";
 import laboratorio from "./laboratorio";
 
 const cenários: Cenário[] = [

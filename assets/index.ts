@@ -1,4 +1,4 @@
-import { Cenário, GameEngine, IGameConfig } from "engine";
+import { Cenário, GameEngine, IGameConfig } from "game/core";
 import cenários from "./scenes";
 interface IAssets{
   cenários: Cenário[];

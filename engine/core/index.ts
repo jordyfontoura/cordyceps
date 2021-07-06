@@ -12,11 +12,14 @@ export { Retangulo } from "game/utils/retangulo";
 export { default as Tempo } from "game/utils/time";
 export { Vetor } from "game/utils/vetor";
 export { debug } from "./debug";
+export { Evento } from "./events";
 export { GameEngine, Jogo } from "./game";
 export type { IGameConfig } from "./game";
 export { GameObject } from "./gameobject";
 export { Cenário } from "./scene";
 export { Tela } from "./tela";
+
+
 
 // const Commons = {
 //   Vetor,

@@ -1,4 +1,5 @@
-import { emitir } from "game/utils/observer";
+// import { emitir } from "game/utils/observer";
+import { Editor } from "game/editor";
 import Aleatorizar from "game/utils/random";
 import { Vetor } from "game/utils/vetor";
 import { Component } from "react";
@@ -18,17 +19,35 @@ export class Display extends Component {
     };
   }
   componentDidMount() {
-    emitir("Game.criar.display", { id: this.state.id });
-    const canvas = document.getElementById(this.state.id.toString());
-
-    canvas?.addEventListener("mousedown", (ev) => {
-      this.drag.start = new Vetor(ev.clientX, ev.clientY);
-      this.drag.mayDrag = true;
+    const canvas = document.getElementById(
+      this.state.id.toString()
+    ) as HTMLCanvasElement | null;
+    if (!canvas) {
+      return;
+    }
+    Editor.emitir("Editor.display.adicionar", {
+      id: this.state.id,
+      elemento: canvas,
     });
-    canvas?.addEventListener("mousemove", (ev) => {
+
+    canvas.addEventListener("mousedown", (ev) => {
+      const mouse = new Vetor(ev.clientX, ev.clientY);
+      this.drag.start = mouse;
+      this.drag.mayDrag = true;
+      Editor.emitir("Editor.display.mouse.down", {
+        id: this.state.id,
+        posição: mouse,
+      });
+    });
+    
+    canvas.addEventListener("mousemove", (ev) => {
       const mousePosition = new Vetor(ev.movementX, ev.movementY);
       if (this.drag.mayDrag && this.drag.dragging) {
-        emitir("Game.display.move", {
+        Editor.emitir("Editor.display.drag.mover", {
+          id: this.state.id,
+          delta: mousePosition.mul(new Vetor(-1, 1)),
+        });
+        Editor.emitir("Editor.display.mover", {
           id: this.state.id,
           delta: mousePosition.mul(new Vetor(-1, 1)),
         });
@@ -40,8 +59,17 @@ export class Display extends Component {
         this.drag.dragging = true;
       }
     });
-    canvas?.addEventListener("wheel", (ev) => {
-      emitir("Editor.display.zoom", { id: this.state.id, delta: ev.deltaY });
+    canvas.addEventListener("wheel", (ev) => {
+      Editor.emitir("Editor.display.zoom", {
+        id: this.state.id,
+        delta: ev.deltaY,
+      });
+    });
+    canvas.addEventListener("mouseup", (ev) => {
+      Editor.emitir("Editor.display.mouse.up", {
+        id: this.state.id,
+        posição: new Vetor(ev.clientX, ev.clientY),
+      });
     });
     document.addEventListener("mouseup", (ev) => {
       this.drag.dragging = false;
@@ -49,7 +77,9 @@ export class Display extends Component {
     });
   }
   componentWillUnmount() {
-    emitir("Game.deletar.display", { id: this.state.id });
+    Editor.emitir("Editor.display.remover", {
+      id: this.state.id,
+    });
   }
   render() {
     return <canvas className="display" id={this.state.id.toString()} />;

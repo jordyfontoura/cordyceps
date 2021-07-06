@@ -24,7 +24,8 @@
   },
   "include": [
     "src",
-    "game",
-    "assets"
+    "engine",
+    "assets",
+    "engine"
   ]
 }

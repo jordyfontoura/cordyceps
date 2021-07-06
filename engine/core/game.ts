@@ -1,5 +1,8 @@
 /* eslint-disable no-fallthrough */
-import { emitir } from "game/utils/observer";
+import { EditorEngine } from "game/editor";
+import EditorEvents from "game/editor/events";
+import GameEvents from "game/events";
+import { ObserverPattern } from "game/utils/observer";
 import { depth } from "game/utils/positions";
 import Tempo from "game/utils/time";
 import { GameObject } from "./gameobject";
@@ -26,13 +29,17 @@ export interface IGameConfig {
   fps: number;
 }
 
+declare global {
+  interface IGameEvents extends IObserversBase {}
+}
+
 export let Jogo: GameEngine;
-export class GameEngine {
+export class GameEngine extends ObserverPattern<IGameEvents> {
+  editor: EditorEngine;
   status: "acordando" | "rodando" | "pausado" | "parado";
   get fps() {
     return this.configurações.fps;
   }
-  telas: Tela[];
   gameObjects: GameObject[];
   configurações: IGameConfig;
   private rotinas: IRotina[] = [];
@@ -41,14 +48,18 @@ export class GameEngine {
   // Singleton
   static criar(config: IGameConfig) {
     if (!Jogo) {
-      Jogo = new GameEngine(config);
+      const Editor = EditorEngine.criar(config);
+      Jogo = new GameEngine(config, Editor);
+      GameEvents(Jogo, Editor);
+      EditorEvents(Jogo, Editor);
     } else {
       Jogo.configurações = config;
     }
     return Jogo;
   }
 
-  private constructor(config: IGameConfig) {
+  private constructor(config: IGameConfig, editor: EditorEngine) {
+    super();
     // if (config?.altura) {
     //   canvas.height = config.altura;
     // }
@@ -58,9 +69,9 @@ export class GameEngine {
     // if (ctx === null) {
     //   throw new Error("canvas.getContext('2d') não encontrado");
     // }
+    this.editor = editor;
     this.status = "acordando";
     this.configurações = config;
-    this.telas = [];
     this.gameObjects = [];
   }
 
@@ -101,21 +112,7 @@ export class GameEngine {
     cenário.carregar(this);
     console.log(`Cenário '${cenário.nome}' carregado com sucesso!`);
   }
-  novaTela(id: number) {
-    const canvas = document.getElementById(id.toString()) as HTMLCanvasElement;
-    const ctx = canvas.getContext("2d");
-    if (ctx === null) {
-      throw new Error("canvas.getContext('2d') não encontrado");
-    }
-    this.telas.push(new Tela(id, canvas, this.configurações));
-  }
-  deletarTela(id: number) {
-    const index = this.telas.findIndex((tela) => tela.id === id);
-    if (index < 0) {
-      return;
-    }
-    this.telas.splice(index, 1);
-  }
+  
   rotina(fn: IRotina | undefined) {
     if (fn) {
       this.rotinas.push(fn);
@@ -137,7 +134,7 @@ export class GameEngine {
     this.gameObjects.map((o) => o.destruir(true));
 
     this.gameObjects = [];
-    this.telas.forEach(tela=>tela.limparTela());
+    this.editor.limparTelas();
     console.log("Jogo encerrado");
   }
 
@@ -181,7 +178,7 @@ export class GameEngine {
   }
 
   private render() {
-    this.telas.forEach((tela) => {
+    this.editor.render((tela) => {
       tela.limparTela();
       const rotinas = this.rotinas.filter((rotina) => rotina.tipo === "visual");
       this.rotinas = this.rotinas.filter((rotina) => rotina.tipo !== "visual");
@@ -209,7 +206,7 @@ export class GameEngine {
       });
     }
     if (!gameObject.ignorarNaHierarquia) {
-      emitir("Game.hierarchy.add", { gameObject });
+      Jogo.emitir("Game.hierarchy.add", { gameObject });
     }
     return gameObject;
   }
@@ -231,11 +228,9 @@ export class GameEngine {
         return false;
       }
       if (!gameObject.ignorarNaHierarquia) {
-        emitir("Game.hierarchy.remove", { gameObject });
+        Jogo.emitir("Game.hierarchy.remove", { gameObject });
       }
-      await Promise.all(
-        gameObject.filhos.map((filho) => filho.destruir(true))
-      );
+      await Promise.all(gameObject.filhos.map((filho) => filho.destruir(true)));
       Jogo.gameObjects.splice(index, 1);
       console.debug(
         `GameObject[${gameObject.id}]${
@@ -268,7 +263,7 @@ export class GameEngine {
             gameObject.filhos.map((filho) => filho.destruir(true))
           ).catch(() => resolve(false));
           if (!gameObject.ignorarNaHierarquia) {
-            emitir("Game.hierarchy.remove", { gameObject });
+            Jogo.emitir("Game.hierarchy.remove", { gameObject });
           }
           Jogo.gameObjects.splice(index, 1);
           console.debug(

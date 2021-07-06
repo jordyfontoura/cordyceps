@@ -1,6 +1,6 @@
+import { Editor } from "game/editor";
 import Aleatorizar from "game/utils/random";
 import { Component } from "react";
-import Editor from "src/editor";
 import "./debug.scss";
 
 export class Debug extends Component {
@@ -15,9 +15,9 @@ export class Debug extends Component {
     this.editorId = this.state.id;
   }
   componentDidMount() {
-    this.editorId = Editor.listen("registros", (editor) => {
+    this.editorId = Editor.escutar("Editor.registro.mudar", (payload) => {
       this.setState({
-        register: editor.registros.map((r) => r.mensagem).reverse(),
+        register: payload.registros.map((r) => r.mensagem).reverse(),
       });
     });
     // emitir("Game.criar.debug", {
@@ -28,7 +28,7 @@ export class Debug extends Component {
     // });
   }
   componentWillUnmount() {
-    Editor.unlisten("registros", this.editorId);
+    Editor.removerEscuta("Editor.registro.mudar", this.editorId);
     // emitir("Game.deletar.debug", { id: this.state.id });
   }
   render() {

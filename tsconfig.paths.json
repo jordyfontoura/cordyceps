@@ -2,13 +2,14 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "visual/*": ["./src/*"],
       "assets/*": ["./assets/*"],
       "engine": [
-        "./src/game/engine"
+        "./engine/core"
       ],
-      "engine/*": ["./src/game/engine/*"],
+      "engine/*": ["./engine/core/*"],
       "styles/*": ["./src/styles/*"],
-      "game/*": ["./src/game/*"]
+      "game/*": ["./engine/*"]
     }
   }
 }

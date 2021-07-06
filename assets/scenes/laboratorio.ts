@@ -1,6 +1,6 @@
 import { Comida } from "assets/gameobjects/comida/comida";
 import { Formiga } from "assets/gameobjects/formiga/formiga";
-import { Aleatorizar, Cenário, debug, GameEngine, Vetor } from "engine";
+import { Aleatorizar, Cenário, debug, GameEngine, Vetor } from "game/core";
 
 export default Cenário.criar("laboratorio", (jogo: GameEngine) => {
   debug('Jogo iniciado!');

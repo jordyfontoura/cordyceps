@@ -1,4 +1,4 @@
-import { GameObject, Tela, Vetor } from "engine";
+import { GameObject, Tela, Vetor } from "game/core";
 
 export class RestosMortais extends GameObject {
   constructor(posição: Vetor) {

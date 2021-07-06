@@ -1,7 +1,7 @@
-import { GameObject } from "engine/gameobject";
+import { GameObject } from "game/core/gameobject";
+import { Editor } from "game/editor";
 import Aleatorizar from "game/utils/random";
 import { Component } from "react";
-import Editor from "src/editor";
 import "./hierarchy.scss";
 
 type HierarchyNode = GameObject;
@@ -19,32 +19,12 @@ export class Hierarchy extends Component {
     this.editorId = this.state.id;
   }
   componentDidMount() {
-    this.editorId = Editor.listen("hierarquia", (editor) => {
+    this.editorId = Editor.escutar("Editor.hierarquia.mudar", (editor) => {
       this.setState({ trees: editor.hierarquia });
     });
-
-    // emitir("Game.criar.hierarchy", {
-    //   id: this.state.id,
-    //   add: (go: GameObject) => {
-    //     if (!go.pai) {
-    //       this.state.trees.push(go);
-    //       this.setState({ trees: [...this.state.trees, go] });
-    //     }
-    //   },
-    //   remove: (go: GameObject) => {
-    //     const index = this.state.trees.findIndex((item) => item.id === go.id);
-    //     if (index < 0) {
-    //       return;
-    //     }
-    //     this.state.trees.splice(index, 1);
-    //     this.setState({ trees: [...this.state.trees] });
-    //   },
-    //   update: (go: GameObject) => {},
-    // });
   }
   componentWillUnmount() {
-    Editor.unlisten('hierarquia', this.editorId);
-    // emitir("Game.deletar.hierarchy", { id: this.state.id });
+    Editor.removerEscuta('Editor.hierarquia.mudar', this.editorId);
   }
   render() {
     return (

@@ -1,4 +1,4 @@
-import { Aleatorizar, GameObject, Tela, Tempo, Vetor } from "engine";
+import { Aleatorizar, GameObject, Tela, Tempo, Vetor } from "game/core";
 // import { GameObject } from "engine/gameobject";
 // import { Tela } from "engine/tela";
 // import Aleatorizar from "game/utils/random";

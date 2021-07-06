@@ -1,13 +1,13 @@
 import {
-  Aleatorizar,
-  Cor,
-  debug,
-  GameObject,
-  Jogo,
-  Tela,
-  Tempo,
-  Vetor
-} from "engine";
+    Aleatorizar,
+    Cor,
+    debug,
+    GameObject,
+    Jogo,
+    Tela,
+    Tempo,
+    Vetor
+} from "game/core";
 import { interpolar, mapearValor } from "game/utils/math";
 import { Comida } from "../comida/comida";
 import { Rastro } from "./rastro";

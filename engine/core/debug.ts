@@ -23,8 +23,8 @@
 //   debuggers.splice(index, 1)
 // }
 
-import { emitir } from "engine";
+import { Jogo } from "game/core";
 
 export function debug(mensagem: string) {
-  emitir("Editor.registro.add", { mensagem });
+  Jogo.emitir("Editor.registro.add", { mensagem });
 }
