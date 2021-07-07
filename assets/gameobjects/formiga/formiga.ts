@@ -10,7 +10,6 @@ import {
 } from "game/core";
 import { interpolar, mapearValor } from "game/utils/math";
 import { Comida } from "../comida/comida";
-import { Rastro } from "./rastro";
 import { RestosMortais } from "./restormortais";
 
 export class Formiga extends GameObject {
@@ -38,7 +37,7 @@ export class Formiga extends GameObject {
   }
   mover(direção: Vetor) {
     this.posição = this.posição.add(direção);
-    Rastro.criar(this.posição);
+    // Rastro.criar(this.posição);
     this.degenerar(1);
   }
   movimento() {

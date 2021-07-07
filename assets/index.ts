@@ -32,7 +32,7 @@ const Assets: IAssets = {
   cenários,
   carregar() {},
   configurações: {
-    fps: 240,
+    fps: 60,
   },
 };
 export default Assets;
