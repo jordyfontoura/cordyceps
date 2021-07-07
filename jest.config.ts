@@ -3,14 +3,14 @@
  * For a detailed explanation regarding each configuration property and type check, visit:
  * https://jestjs.io/docs/en/configuration.html
  */
-// const { pathsToModuleNameMapper } = require('ts-jest/utils');
-// const { compilerOptions } = require('./tsconfig');
-
-import { pathsToModuleNameMapper } from 'ts-jest/utils';
-import { compilerOptions } from './tsconfig.paths.json';
+const { pathsToModuleNameMapper } = require('ts-jest/utils')
+// In the following statement, replace `./tsconfig` with the path to your `tsconfig` file
+// which contains the path mapping (ie the `compilerOptions.paths` option):
+const { compilerOptions } = require('./tsconfig.paths.json')
 
 export default {
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths , { prefix: '<rootDir>/' } ),
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
+  // moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths /*, { prefix: '<rootDir>/' }  */),
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 

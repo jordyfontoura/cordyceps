@@ -1,7 +1,8 @@
 /* eslint-disable no-fallthrough */
-import { EditorEngine } from "game/editor";
+import { Editor, EditorEngine } from "game/editor";
 import EditorEvents from "game/editor/events";
 import GameEvents from "game/events";
+import { restringir } from "game/utils/math";
 import { ObserverPattern } from "game/utils/observer";
 import { depth } from "game/utils/positions";
 import Tempo from "game/utils/time";
@@ -76,6 +77,7 @@ export class GameEngine extends ObserverPattern<IGameEvents> {
   }
 
   async iniciar(cenário?: string) {
+    console.log(this, this.editor);
     switch (this.status) {
       case "parado":
       case "acordando":
@@ -112,7 +114,7 @@ export class GameEngine extends ObserverPattern<IGameEvents> {
     cenário.carregar(this);
     console.log(`Cenário '${cenário.nome}' carregado com sucesso!`);
   }
-  
+
   rotina(fn: IRotina | undefined) {
     if (fn) {
       this.rotinas.push(fn);
@@ -120,12 +122,14 @@ export class GameEngine extends ObserverPattern<IGameEvents> {
   }
 
   private async loop() {
+    const relogio = new Tempo.Relogio();
     while (this.status !== "parado") {
+      relogio.cronometrar();
       if (this.status === "rodando") {
         await this.tick();
       }
       this.render();
-      await Tempo.esperar(1000 / this.fps);
+      await Tempo.esperar(restringir(1000 / this.fps - relogio.decorrido, 0, Infinity) + 50);
     }
     await this.encerrar();
   }
@@ -135,15 +139,16 @@ export class GameEngine extends ObserverPattern<IGameEvents> {
 
     this.gameObjects = [];
     this.editor.limparTelas();
+    this.emitir("Game.encerrar");
     console.log("Jogo encerrado");
   }
 
   private async tick() {
-    console.debug(
-      `Tempo: ${Tempo.converter(this.ticks, "ticks", "segundos").toPrecision(
-        2
-      )} Tick: ${this.ticks}`
-    );
+    // console.debug(
+    //   `Tempo: ${Tempo.converter(this.ticks, "ticks", "segundos").toPrecision(
+    //     2
+    //   )} Tick: ${this.ticks}`
+    // );
     const rotinas = this.rotinas.filter((rotina) => rotina.tipo === "rotina");
     this.rotinas = this.rotinas.filter((rotina) => rotina.tipo !== "rotina");
     while (true) {
@@ -206,7 +211,7 @@ export class GameEngine extends ObserverPattern<IGameEvents> {
       });
     }
     if (!gameObject.ignorarNaHierarquia) {
-      Jogo.emitir("Game.hierarchy.add", { gameObject });
+      Editor.emitir("Editor.hierarquia.adicionar", { gameObject });
     }
     return gameObject;
   }
@@ -228,17 +233,17 @@ export class GameEngine extends ObserverPattern<IGameEvents> {
         return false;
       }
       if (!gameObject.ignorarNaHierarquia) {
-        Jogo.emitir("Game.hierarchy.remove", { gameObject });
+        Editor.emitir("Editor.hierarquia.remover", { gameObject });
       }
       await Promise.all(gameObject.filhos.map((filho) => filho.destruir(true)));
       Jogo.gameObjects.splice(index, 1);
-      console.debug(
-        `GameObject[${gameObject.id}]${
-          gameObject.nome !== gameObject.id.toString()
-            ? " '" + gameObject.nome + "'"
-            : ""
-        } destruido`
-      );
+      // console.debug(
+      //   `GameObject[${gameObject.id}]${
+      //     gameObject.nome !== gameObject.id.toString()
+      //       ? " '" + gameObject.nome + "'"
+      //       : ""
+      //   } destruido`
+      // );
       return true;
     }
     return new Promise((resolve) => {
@@ -263,16 +268,16 @@ export class GameEngine extends ObserverPattern<IGameEvents> {
             gameObject.filhos.map((filho) => filho.destruir(true))
           ).catch(() => resolve(false));
           if (!gameObject.ignorarNaHierarquia) {
-            Jogo.emitir("Game.hierarchy.remove", { gameObject });
+            Editor.emitir("Editor.hierarquia.remover", { gameObject });
           }
           Jogo.gameObjects.splice(index, 1);
-          console.debug(
-            `GameObject[${gameObject.id}]${
-              gameObject.nome !== gameObject.id.toString()
-                ? " '" + gameObject.nome + "'"
-                : ""
-            } destruido`
-          );
+          // console.debug(
+          //   `GameObject[${gameObject.id}]${
+          //     gameObject.nome !== gameObject.id.toString()
+          //       ? " '" + gameObject.nome + "'"
+          //       : ""
+          //   } destruido`
+          // );
           resolve(true);
         },
       });

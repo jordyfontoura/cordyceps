@@ -1,8 +1,9 @@
-import { GameObject, IGameConfig, Tela } from "game/core";
+import { GameObject, IGameConfig, Tela, Vetor } from "game/core";
 import { ObserverPattern } from "game/utils/observer";
 
 export interface IRegistro {
   mensagem: string;
+  trace?: string;
 }
 // type IUpdateTipo = "registros" | "hierarquia";
 
@@ -15,10 +16,10 @@ export class EditorEngine extends ObserverPattern<IEditorEvents> {
   hierarquia: GameObject[] = [];
   registros: IRegistro[] = [];
 
-  static criar(configurações: IGameConfig){
+  static criar(configurações: IGameConfig) {
     if (!Editor) {
       Editor = new EditorEngine(configurações);
-    }else{
+    } else {
       Editor.configurações = configurações;
     }
     return Editor;
@@ -43,10 +44,34 @@ export class EditorEngine extends ObserverPattern<IEditorEvents> {
     }
     this.telas.splice(index, 1);
   }
-  limparTelas(){
+  limparTelas() {
     this.telas.forEach((tela) => tela.limparTela());
   }
-  render(fn: (tela: Tela)=>void){
+  render(fn: (tela: Tela) => void) {
     this.telas.forEach(fn);
+  }
+
+  ToWorldSpace(posição: Vetor, tela: Tela | number, from: 'client' | 'screen') {
+    if (typeof tela === "number") {
+      let res = Editor.telas.find((t) => t.id === tela);
+      if (!res) {
+        throw new Error("Tela não encontrada!");
+      }
+      tela = res;
+    }
+    return tela.toWorldSpace(posição, from);
+  }
+  ToScreenSpace(posição: Vetor, tela: Tela | number, from: 'client' | 'world') {
+    
+    if (typeof tela === "number") {
+      let res = Editor.telas.find((t) => t.id === tela);
+      if (!res) {
+        throw new Error("Tela não encontrada!");
+      }
+      tela = res;
+    }
+
+    
+    return tela.toScreenSpace(posição, from);
   }
 }

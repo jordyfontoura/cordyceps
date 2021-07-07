@@ -1,23 +1,23 @@
-import { Editor } from "game/editor";
+import { Editor, IRegistro } from "game/editor";
 import Aleatorizar from "game/utils/random";
 import { Component } from "react";
 import "./debug.scss";
 
 export class Debug extends Component {
-  state: { id: number; register: string[] };
+  state: { id: number; register: IRegistro[] };
   editorId: number;
   constructor(props: any) {
     super(props);
     this.state = {
       id: Aleatorizar.Id(),
-      register: Editor.registros.map((r) => r.mensagem).reverse() || [],
+      register: Editor.registros.reverse() || [],
     };
     this.editorId = this.state.id;
   }
   componentDidMount() {
     this.editorId = Editor.escutar("Editor.registro.mudar", (payload) => {
       this.setState({
-        register: payload.registros.map((r) => r.mensagem).reverse(),
+        register: payload.registros.reverse(),
       });
     });
     // emitir("Game.criar.debug", {
@@ -35,9 +35,13 @@ export class Debug extends Component {
     return (
       <div className="debug">
         <ul className="registers">
-          {this.state.register.slice(0, 100).map((mensagem, index) => (
-            <li className="register" key={mensagem.length + "" + index}>
-              {mensagem}
+          {this.state.register.slice(0, 100).map((registro, index) => (
+            <li
+              className="register"
+              key={index}
+            >
+              <p className="mensagem">{registro.mensagem}</p>
+              {registro.trace && <p className="trace">{registro.trace}</p>}
             </li>
           ))}
           {this.state.register.length > 100 && <li>...</li>}

@@ -1,9 +1,14 @@
 .hierarchy{
   .nodes{
     .node{
+      user-select: none;
+      cursor: default;
       align-items: baseline;
       display: flex;
       font-family: system-ui;
+      &:hover{
+        opacity: 50%;
+      }
       .identifier{
         font-size: 8px;
         margin-right: 1ch;

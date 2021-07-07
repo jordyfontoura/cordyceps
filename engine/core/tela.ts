@@ -4,7 +4,18 @@ import { IGameConfig } from "./game";
 
 export class Tela {
   id: number;
-  centro: Vetor;
+  get centro() {
+    return this.size.div(2);
+  }
+  get size() {
+    return new Vetor(this.largura, this.altura);
+  }
+  get offsetClient() {
+    return new Vetor(this.canvas.clientLeft, this.canvas.clientTop);
+  }
+  get clientSize() {
+    return new Vetor(this.canvas.clientWidth, this.canvas.clientHeight);
+  }
   largura: number;
   altura: number;
   configurações: IGameConfig;
@@ -21,7 +32,6 @@ export class Tela {
     this.tela = canvas.getContext("2d") as CanvasRenderingContext2D;
     this.largura = this.tela.canvas.width;
     this.altura = this.tela.canvas.height;
-    this.centro = new Vetor(this.largura, this.altura).div(2);
     this.configurações = config;
     this.posição = Vetor.Zero;
 
@@ -45,26 +55,57 @@ export class Tela {
     this.canvas.width = this.canvas.clientWidth;
     this.largura = this.tela.canvas.width;
     this.altura = this.tela.canvas.height;
-    this.centro = new Vetor(this.largura, this.altura).div(2);
   }
-  toLocalPosition(posição: Vetor) {
-    return new Vetor(posição.x, -posição.y)
-    .sub(this.posição.mul(new Vetor(1, -1))).mul(1+this.zoomValor)
-      .add(this.centro)
+
+  toScreenSpace(posição: Vetor, from: "client" | "world") {
+    switch (from) {
+      case "client":
+        return posição.sub(this.offsetClient).div(this.clientSize).mul(this.size);
+      case "world":
+        return posição
+          .sub(this.posição)
+          .mul(this.zoomValor + 1)
+          .mul(new Vetor(1, -1))
+          .add(this.centro);
+    }
+  }
+  toWorldSpace(posição: Vetor, from: "client" | "screen"): Vetor {
+    switch (from) {
+      case "client":
+        return this.toWorldSpace(
+          this.toScreenSpace(posição, "client"),
+          "screen"
+        );
+      case "screen":
+        return posição
+          .sub(this.centro)
+          .div(this.zoomValor + 1)
+          .mul(new Vetor(1, -1))
+          .add(this.posição);
+    }
   }
   mover(posição: Vetor, deslocarApenas = false) {
     if (deslocarApenas) {
-      this.posição = this.posição.add(posição.div(this.zoomValor+1));
+      this.posição = this.posição.add(posição);
     } else {
       this.posição = posição;
     }
   }
-  setPixel(posição: Vetor, cor: string) {
-    let pos = this.toLocalPosition(posição);
+  setPixel(
+    posição: Vetor,
+    cor: string,
+    from: "world" | "client" | "screen" = "world"
+  ) {
+    let pos = from === "screen" ? posição : this.toScreenSpace(posição, from);
     let tmp = this.tela.fillStyle;
 
     this.tela.fillStyle = cor;
-    this.tela.fillRect(pos.x, pos.y, 1*(this.zoomValor+1), 1*(this.zoomValor+1));
+    this.tela.fillRect(
+      pos.x,
+      pos.y,
+      1 * (this.zoomValor + 1),
+      1 * (this.zoomValor + 1)
+    );
 
     this.tela.fillStyle = tmp;
   }

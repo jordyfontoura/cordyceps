@@ -31,44 +31,64 @@ export class Display extends Component {
     });
 
     canvas.addEventListener("mousedown", (ev) => {
+      ev.preventDefault();
       const mouse = new Vetor(ev.clientX, ev.clientY);
       this.drag.start = mouse;
       this.drag.mayDrag = true;
       Editor.emitir("Editor.display.mouse.down", {
         id: this.state.id,
-        posição: mouse,
+        posição: Editor.ToWorldSpace(
+          new Vetor(ev.clientX, ev.clientY),
+          this.state.id,
+          "client"
+        ),
       });
     });
-    
+
     canvas.addEventListener("mousemove", (ev) => {
-      const mousePosition = new Vetor(ev.movementX, ev.movementY);
+      ev.preventDefault();
+      const mouseMovement = new Vetor(ev.movementX, ev.movementY);
+      Editor.emitir("Editor.display.mover", {
+        id: this.state.id,
+        delta: mouseMovement,
+        posição: Editor.ToWorldSpace(
+          new Vetor(ev.clientX, ev.clientY),
+          this.state.id,
+          "client"
+        ),
+      });
       if (this.drag.mayDrag && this.drag.dragging) {
         Editor.emitir("Editor.display.drag.mover", {
           id: this.state.id,
-          delta: mousePosition.mul(new Vetor(-1, 1)),
-        });
-        Editor.emitir("Editor.display.mover", {
-          id: this.state.id,
-          delta: mousePosition.mul(new Vetor(-1, 1)),
+          delta: mouseMovement,
         });
       }
       if (
         this.drag.mayDrag &&
-        mousePosition.sub(this.drag.start).magnitude > 10
+        mouseMovement.sub(this.drag.start).magnitude > 10
       ) {
         this.drag.dragging = true;
       }
     });
     canvas.addEventListener("wheel", (ev) => {
+      ev.preventDefault();
       Editor.emitir("Editor.display.zoom", {
         id: this.state.id,
         delta: ev.deltaY,
       });
     });
     canvas.addEventListener("mouseup", (ev) => {
+      ev.preventDefault();
       Editor.emitir("Editor.display.mouse.up", {
         id: this.state.id,
-        posição: new Vetor(ev.clientX, ev.clientY),
+        posição: new Vetor(ev.clientX, ev.clientY)
+          .sub(
+            new Vetor(
+              canvas.clientLeft + canvas.clientWidth / 2,
+              canvas.clientTop + canvas.clientHeight / 2
+            )
+          )
+          .mul(new Vetor(1, -1)),
       });
     });
     document.addEventListener("mouseup", (ev) => {

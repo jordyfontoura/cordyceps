@@ -8,11 +8,13 @@ declare global {
   }
 }
 
-const registro = {
+const ERegistro = {
   executar(Jogo: GameEngine, Editor: EditorEngine) {
     Editor.escutar("Editor.registro.adicionar", (registro) => {
       Editor.registros.push(registro);
       Editor.emitir("Editor.registro.mudar", { registros: Editor.registros });
     });
   },
-}
+};
+
+export default ERegistro;

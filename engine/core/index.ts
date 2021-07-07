@@ -11,7 +11,7 @@ export { default as Aleatorizar } from "game/utils/random";
 export { Retangulo } from "game/utils/retangulo";
 export { default as Tempo } from "game/utils/time";
 export { Vetor } from "game/utils/vetor";
-export { debug } from "./debug";
+export { Debug } from "./debug";
 export { Evento } from "./events";
 export { GameEngine, Jogo } from "./game";
 export type { IGameConfig } from "./game";

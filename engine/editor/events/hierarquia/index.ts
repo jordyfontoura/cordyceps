@@ -13,9 +13,9 @@ declare global {
     };
   }
 }
-const hierarquia = {
+const EHierarquia = {
   executar(Jogo: GameEngine, Editor: EditorEngine) {
-    Editor.escutar("Editor.hierarquia.adiciona", ({ gameObject }) => {
+    Editor.escutar("Editor.hierarquia.adicionar", ({ gameObject }) => {
       Editor.hierarquia.push(gameObject);
       Editor.emitir("Editor.hierarquia.mudar", {
         hierarquia: Editor.hierarquia,
@@ -35,3 +35,5 @@ const hierarquia = {
     });
   },
 };
+
+export default EHierarquia;

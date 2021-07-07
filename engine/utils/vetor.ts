@@ -1,5 +1,5 @@
 export class Vetor {
-  static get Direções(){
+  static get Direções() {
     return [this.Esquerda, this.Direita, this.Cima, this.Baixo];
   }
   static get Zero() {
@@ -28,9 +28,15 @@ export class Vetor {
   sub(other: Vetor): Vetor {
     return new Vetor(this.x - other.x, this.y - other.y);
   }
-  mul(other: Vetor | number): Vetor {
-    if (typeof other === "number")
+  mul(other: Vetor): Vetor;
+  mul(other: number, y?: number): Vetor;
+  mul(other: Vetor | number, y?: number): Vetor {
+    if (typeof other === "number") {
+      if (y !== undefined) {
+        return new Vetor(this.x * other, this.y * y);
+      }
       return new Vetor(this.x * other, this.y * other);
+    }
 
     return new Vetor(this.x * other.x, this.y * other.y);
   }
@@ -40,13 +46,19 @@ export class Vetor {
 
     return new Vetor(this.x / other.x, this.y / other.y);
   }
-  distância(other: Vetor): number{
+  distância(other: Vetor): number {
     return this.sub(other).magnitude;
   }
   get magnitude() {
     return Math.sqrt(this.x ** 2 + this.y ** 2);
   }
-  igual(other: Vetor){
+  get negativo(){
+    return new Vetor(-this.x, -this.y);
+  }
+  igual(other: Vetor) {
     return this.x === other.x && this.y === other.y;
+  }
+  toString() {
+    return `Vetor(${this.x},${this.y})`;
   }
 }

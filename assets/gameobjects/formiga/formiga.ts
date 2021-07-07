@@ -1,12 +1,12 @@
 import {
-    Aleatorizar,
-    Cor,
-    debug,
-    GameObject,
-    Jogo,
-    Tela,
-    Tempo,
-    Vetor
+  Aleatorizar,
+  Cor,
+  Debug,
+  GameObject,
+  Jogo,
+  Tela,
+  Tempo,
+  Vetor
 } from "game/core";
 import { interpolar, mapearValor } from "game/utils/math";
 import { Comida } from "../comida/comida";
@@ -20,13 +20,13 @@ export class Formiga extends GameObject {
   constructor(posição: Vetor) {
     super(posição);
     const tempoEstimado = Aleatorizar.Int(0, 30);
-    debug(`Formiga criada ${tempoEstimado}`);
+    Debug.log(`Formiga criada ${tempoEstimado}`);
     this.calorias = Tempo.converter(tempoEstimado, "segundos", "ticks");
     this.caloriasMaxima = this.calorias;
     Tempo.startCooldown(this.id, 10000);
   }
   quandoDestruir() {
-    debug(`Formiga[${this.id}] destruida`);
+    Debug.log(`Formiga[${this.id}] destruida`);
     new RestosMortais(this.posição);
   }
 
@@ -83,7 +83,7 @@ export class Formiga extends GameObject {
   }
   comer(comida: Comida) {
     Tempo.startCooldown(this.id, 10000);
-    debug(
+    Debug.log(
       `Eu ${this.nome} comi ${comida.nome} que tinha ${comida.caloria} calorias`
     );
     comida.alimentar(this);
