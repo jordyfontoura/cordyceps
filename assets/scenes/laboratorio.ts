@@ -4,7 +4,7 @@ import { Aleatorizar, Cenário, Debug, GameEngine, Vetor } from "game/core";
 
 export default Cenário.criar("laboratorio", (jogo: GameEngine) => {
   Debug.log('Jogo iniciado!');
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < 50; i++) {
     new Comida(
       new Vetor(
         Aleatorizar.Chance(0.5)
@@ -17,7 +17,7 @@ export default Cenário.criar("laboratorio", (jogo: GameEngine) => {
     );
   }
   new Formiga(Vetor.Zero).nome = "Aroldo";
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 200; i++) {
     new Formiga(Vetor.Zero);
   }
 });
