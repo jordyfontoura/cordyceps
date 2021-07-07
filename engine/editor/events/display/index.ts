@@ -69,6 +69,8 @@ const EHierarquia = {
       }
       tela.zoom(payload.delta);
     });
+    
+
     Editor.escutar("Editor.display.mouse.down", (payload) => {
       // console.log(payload.posição.toString());
     });

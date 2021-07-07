@@ -95,6 +95,10 @@ export class Display extends Component {
       this.drag.dragging = false;
       this.drag.mayDrag = false;
     });
+    document.addEventListener("mouseleave", (ev)=>{
+      this.drag.dragging = false;
+      this.drag.mayDrag = false;
+    })
   }
   componentWillUnmount() {
     Editor.emitir("Editor.display.remover", {

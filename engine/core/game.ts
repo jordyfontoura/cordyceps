@@ -235,7 +235,7 @@ export class GameEngine extends ObserverPattern<IGameEvents> {
       if (!gameObject.ignorarNaHierarquia) {
         Editor.emitir("Editor.hierarquia.remover", { gameObject });
       }
-      await Promise.all(gameObject.filhos.map((filho) => filho.destruir(true)));
+      await Promise.allSettled(gameObject.filhos.map((filho) => filho.destruir(true)));
       Jogo.gameObjects.splice(index, 1);
       // console.debug(
       //   `GameObject[${gameObject.id}]${
@@ -264,7 +264,7 @@ export class GameEngine extends ObserverPattern<IGameEvents> {
             return resolve(false);
           }
           gameObject.quandoDestruir?.();
-          await Promise.all(
+          await Promise.allSettled(
             gameObject.filhos.map((filho) => filho.destruir(true))
           ).catch(() => resolve(false));
           if (!gameObject.ignorarNaHierarquia) {
