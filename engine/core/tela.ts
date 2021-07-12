@@ -21,7 +21,7 @@ export class Tela {
   configurações: IGameConfig;
   posição: Vetor;
   zoomValor: number = 0;
-  private tela: CanvasRenderingContext2D;
+  ctx: CanvasRenderingContext2D;
   static telas: Tela[] = [];
   constructor(
     id: number,
@@ -29,15 +29,15 @@ export class Tela {
     config: IGameConfig
   ) {
     this.id = id;
-    this.tela = canvas.getContext("2d") as CanvasRenderingContext2D;
-    this.largura = this.tela.canvas.width;
-    this.altura = this.tela.canvas.height;
+    this.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+    this.largura = this.ctx.canvas.width;
+    this.altura = this.ctx.canvas.height;
     this.configurações = config;
     this.posição = Vetor.Zero;
 
     this.ajustarTela();
 
-    this.tela.imageSmoothingEnabled = false;
+    this.ctx.imageSmoothingEnabled = false;
     this.canvas.addEventListener(
       "resize",
       (e) => {
@@ -50,11 +50,11 @@ export class Tela {
     Tela.telas.push(this);
   }
   ajustarTela() {
-    this.tela.imageSmoothingEnabled = false;
+    this.ctx.imageSmoothingEnabled = false;
     this.canvas.height = this.canvas.clientHeight;
     this.canvas.width = this.canvas.clientWidth;
-    this.largura = this.tela.canvas.width;
-    this.altura = this.tela.canvas.height;
+    this.largura = this.ctx.canvas.width;
+    this.altura = this.ctx.canvas.height;
   }
 
   toScreenSpace(posição: Vetor, from: "client" | "world") {
@@ -97,20 +97,20 @@ export class Tela {
     from: "world" | "client" | "screen" = "world"
   ) {
     let pos = from === "screen" ? posição : this.toScreenSpace(posição, from);
-    let tmp = this.tela.fillStyle;
+    let tmp = this.ctx.fillStyle;
 
-    this.tela.fillStyle = cor;
-    this.tela.fillRect(
+    this.ctx.fillStyle = cor;
+    this.ctx.fillRect(
       pos.x,
       pos.y,
       1 * (this.zoomValor + 1),
       1 * (this.zoomValor + 1)
     );
 
-    this.tela.fillStyle = tmp;
+    this.ctx.fillStyle = tmp;
   }
   limparTela() {
-    this.tela.clearRect(0, 0, this.largura, this.altura);
+    this.ctx.clearRect(0, 0, this.largura, this.altura);
   }
   zoom(delta: number) {
     this.zoomValor = restringir(this.zoomValor - delta * 0.01, 0, 20);

@@ -58,7 +58,7 @@ const EHierarquia = {
         return;
       }
       tela.mover(
-        payload.delta.div(1.25 * (tela.zoomValor + 1)).mul(-1, 1),
+        payload.delta.div(1 * (tela.zoomValor + 1)).mul(-1, 1),
         true
       );
     });

@@ -32,13 +32,13 @@ export class Display extends Component {
 
     canvas.addEventListener("mousedown", (ev) => {
       ev.preventDefault();
-      const mouse = new Vetor(ev.clientX, ev.clientY);
+      const mouse = new Vetor(ev.pageX, ev.pageY);
       this.drag.start = mouse;
       this.drag.mayDrag = true;
       Editor.emitir("Editor.display.mouse.down", {
         id: this.state.id,
         posição: Editor.ToWorldSpace(
-          new Vetor(ev.clientX, ev.clientY),
+          new Vetor(ev.pageX, ev.pageY),
           this.state.id,
           "client"
         ),
@@ -52,7 +52,7 @@ export class Display extends Component {
         id: this.state.id,
         delta: mouseMovement,
         posição: Editor.ToWorldSpace(
-          new Vetor(ev.clientX, ev.clientY),
+          new Vetor(ev.pageX, ev.pageY),
           this.state.id,
           "client"
         ),
@@ -81,7 +81,7 @@ export class Display extends Component {
       ev.preventDefault();
       Editor.emitir("Editor.display.mouse.up", {
         id: this.state.id,
-        posição: new Vetor(ev.clientX, ev.clientY)
+        posição: new Vetor(ev.pageX, ev.pageY)
           .sub(
             new Vetor(
               canvas.clientLeft + canvas.clientWidth / 2,

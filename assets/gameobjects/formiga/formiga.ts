@@ -10,17 +10,21 @@ import {
 } from "game/core";
 import { interpolar, mapearValor } from "game/utils/math";
 import { Comida } from "../comida/comida";
+import { Rastro } from "./rastro";
 import { RestosMortais } from "./restormortais";
 
 export class Formiga extends GameObject {
   calorias: number;
   caloriasMaxima: number;
   zIndex = 10;
+  get faminta() {
+    return this.calorias < 0.6 * this.caloriasMaxima;
+  }
   constructor(posição: Vetor) {
     super(posição);
     const tempoEstimado = Aleatorizar.Int(0, 30);
     Debug.log(`Formiga criada ${tempoEstimado}`);
-    this.calorias = Tempo.converter(tempoEstimado, "segundos", "ticks");
+    this.calorias = 4000;
     this.caloriasMaxima = this.calorias;
     Tempo.startCooldown(this.id, 10000);
   }
@@ -37,11 +41,12 @@ export class Formiga extends GameObject {
   }
   mover(direção: Vetor) {
     this.posição = this.posição.add(direção);
-    // Rastro.criar(this.posição);
+    Rastro.criar(this.posição);
+    // Caminho.criar(this.posição)s;
     this.degenerar(1);
   }
   movimento() {
-    if (Comida.comidasExistentes.length) {
+    if (Comida.comidasExistentes.length && this.faminta) {
       let probabilidades = [0, 0, 0, 0];
       Vetor.Direções.forEach((direção, index) => {
         const pos = this.posição.add(direção);
@@ -64,7 +69,15 @@ export class Formiga extends GameObject {
 
       this.mover(Vetor.Direções[Aleatorizar.Index(probabilidades)]);
     } else {
-      this.mover(Aleatorizar.Direção());
+      if (!Aleatorizar.Chance(1 / 5))
+        this.mover(
+          Aleatorizar.Item([
+            Vetor.Esquerda,
+            Vetor.Direita,
+            Vetor.Cima,
+            Vetor.Baixo,
+          ])
+        );
     }
   }
   tick() {
@@ -90,9 +103,12 @@ export class Formiga extends GameObject {
   render(tela: Tela) {
     let values = interpolar(
       mapearValor(this.calorias, 0, this.caloriasMaxima, 0, 1) || 1,
-      [128, 0, 0],
+      [200, 0, 0],
       [0, 0, 0]
     );
-    tela.setPixel(this.posição, new Cor(values[0], values[1], values[2]).toHex());
+    tela.setPixel(
+      this.posição,
+      new Cor(values[0], values[1], values[2]).toHex()
+    );
   }
 }

@@ -1,5 +1,4 @@
-import { Cenário, GameEngine, IGameConfig } from "game/core";
-import seed from "seed-random";
+import { Aleatorizar, Cenário, GameEngine, IGameConfig } from "game/core";
 import cenários from "./scenes";
 
 interface IAssets {
@@ -7,30 +6,19 @@ interface IAssets {
   carregar(jogo: GameEngine): void;
   configurações?: IGameConfig;
 }
-const seedsAceitas =
-  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
 
-function randomSeed() {
-  let res = "";
-  while (res.length < 5 + Math.random() * 25) {
-    res += seedsAceitas[Math.floor(Math.random() * seedsAceitas.length)];
-  }
-  return res;
-}
-const url = new URL(window.location.href);
-let useSeed = randomSeed();
-let urlSeed = url.pathname.split("/").pop();
-if (urlSeed) {
-  if (!["play"].includes(urlSeed)) {
-    useSeed = urlSeed;
-  }
-}
-console.log("Seed:", useSeed);
-seed(useSeed, { global: true });
 
 const Assets: IAssets = {
   cenários,
-  carregar() {},
+  carregar() {
+    const url = new URL(window.location.href);
+    if (url.searchParams.has('seed')) {
+      const seed =  url.searchParams.get('seed');
+      if (seed)
+        Aleatorizar.setSeed(seed);
+    }
+    console.log("Seed:", Aleatorizar.seed);
+  },
   configurações: {
     fps: 60,
   },

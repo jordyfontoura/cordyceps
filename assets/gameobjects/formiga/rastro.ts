@@ -1,40 +1,71 @@
-import { Aleatorizar, GameObject, Tela, Tempo, Vetor } from "game/core";
+import {
+  Cor,
+  GameObject,
+  interpolar,
+  Jogo,
+  mapearValor,
+  Tela,
+  Vetor
+} from "game/core";
 // import { GameObject } from "engine/gameobject";
 // import { Tela } from "engine/tela";
 // import Aleatorizar from "game/utils/random";
 // import Tempo from "game/utils/time";
 // import { Vetor } from "game/utils/vetor";
 
-const TempoDoRastro = 1;
-export  class Rastro extends GameObject {
-  ticksDeVida: number;
-  static rastros: Rastro[] = [];
+const TempoDoRastro = 30 * 3;
+export class Rastro extends GameObject {
+  // static rastros: Rastro[] = [];
+  static instancia: Rastro;
+  static matriz: { posição: Vetor; nascimento: number }[] = [];
   private constructor(posição: Vetor) {
-    super(posição, {ignorarNaHierarquia: true});
-    this.ticksDeVida = Tempo.converter(TempoDoRastro, "segundos", "ticks");
-    Rastro.rastros.push(this);
+    super(posição, { ignorarNaHierarquia: true });
+    // this.ticksDeVida = Tempo.converter(TempoDoRastro, "segundos", "ticks");
+    // Rastro.rastros.push(this);
   }
   static criar(posição: Vetor) {
-    let rastro = Rastro.rastros.find((item) => item.posição.igual(posição));
+    let rastro = Rastro.matriz.find((item) => item.posição.igual(posição));
     if (rastro) {
-      rastro.ticksDeVida = Tempo.converter(TempoDoRastro, "segundos", "ticks");
+      rastro.nascimento = Jogo.ticks;
     } else {
-      rastro = new Rastro(posição);
+      Rastro.matriz.push({
+        posição,
+        nascimento: Jogo.ticks,
+      });
     }
-    return rastro;
+    if (!this.instancia) {
+      this.instancia = new Rastro(Vetor.Zero);
+    }
+    return this.instancia;
   }
   quandoDestruir() {
-    const index = Rastro.rastros.findIndex((item) => item.id === this.id);
-    Rastro.rastros.splice(index, 1);
+    Rastro.matriz = [];
   }
   tick() {
-    this.ticksDeVida--;
-    if (this.ticksDeVida <= 0 && Aleatorizar.Chance(5 / 100)) {
-      this.destruir();
+    for (let i = 0; i < Rastro.matriz.length; i++) {
+      const item = Rastro.matriz[i];
+      if (Jogo.ticks - item.nascimento > TempoDoRastro) {
+        Rastro.matriz.splice(i--, 1);
+      }
     }
   }
   render(tela: Tela) {
-    const valor = Math.round((1 / (1 + Math.abs(this.ticksDeVida / 10))) * (255-200) + 200);
-    tela.setPixel(this.posição, `rgb(${valor}, ${valor}, ${valor})`);
+    for (let i = 0; i < Rastro.matriz.length; i++) {
+      const item = Rastro.matriz[i];
+      const values = interpolar(
+        mapearValor(
+          Jogo.ticks - item.nascimento,
+          0,
+          TempoDoRastro,
+          0,
+          1,
+          true
+        ) || 0,
+        [75, 54, 33],
+        [255, 255, 255]
+      );
+      const cor = new Cor(values[0], values[1], values[2]).toHex();
+      tela.setPixel(item.posição, cor);
+    }
   }
 }

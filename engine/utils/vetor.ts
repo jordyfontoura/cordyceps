@@ -20,6 +20,15 @@ export class Vetor {
   static get Baixo() {
     return new Vetor(0, -1);
   }
+  get Floor(){
+    return new Vetor(Math.floor(this.x), Math.floor(this.y))
+  }
+  get Round(){
+    return new Vetor(Math.round(this.x), Math.round(this.y))
+  }
+  get Ceil(){
+    return new Vetor(Math.ceil(this.x), Math.ceil(this.y))
+  }
 
   constructor(public x: number, public y: number) {}
   add(other: Vetor): Vetor {
@@ -52,7 +61,7 @@ export class Vetor {
   get magnitude() {
     return Math.sqrt(this.x ** 2 + this.y ** 2);
   }
-  get negativo(){
+  get negativo() {
     return new Vetor(-this.x, -this.y);
   }
   igual(other: Vetor) {
@@ -61,4 +70,15 @@ export class Vetor {
   toString() {
     return `Vetor(${this.x},${this.y})`;
   }
+  /**
+   * Rotaciona o vetor `theta` graus
+   * @param theta Ângulo em radianos
+   * @returns
+   */
+  rotacionado(theta: number) {
+    const sen = Math.sin(theta);
+    const cos = Math.cos(theta);
+    return new Vetor(this.x * cos + this.y * sen, this.y * cos - this.x * sen);
+  }
+
 }

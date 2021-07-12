@@ -1,3 +1,4 @@
+export { EditorEngine } from "game/editor";
 export { Cor } from "game/utils/color";
 export {
   distribuir,
@@ -18,7 +19,6 @@ export type { IGameConfig } from "./game";
 export { GameObject } from "./gameobject";
 export { Cenário } from "./scene";
 export { Tela } from "./tela";
-
 
 
 // const Commons = {

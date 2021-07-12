@@ -44,7 +44,7 @@ export class GameEngine extends ObserverPattern<IGameEvents> {
   gameObjects: GameObject[];
   configurações: IGameConfig;
   private rotinas: IRotina[] = [];
-  private ticks: number = 0;
+  public ticks: number = 0;
 
   // Singleton
   static criar(config: IGameConfig) {
@@ -129,6 +129,7 @@ export class GameEngine extends ObserverPattern<IGameEvents> {
         await this.tick();
       }
       this.render();
+      this.ticks++;
       await Tempo.esperar(restringir(1000 / this.fps - relogio.decorrido, 0, Infinity) + 50);
     }
     await this.encerrar();
