@@ -6,7 +6,7 @@ import Play from "./Play";
 function App() {
   const url = new URL(window.location.href);
 
-  if (url.pathname.match(/^\/play.*$/)) {
+  if (url.pathname.match(/.*\/play.*$/)) {
     return <Play />
   }
   return <Editor />;

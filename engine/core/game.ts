@@ -7,6 +7,7 @@ import { ObserverPattern } from "game/utils/observer";
 import { depth } from "game/utils/positions";
 import Tempo from "game/utils/time";
 import { GameObject } from "./gameobject";
+import RigidBody from "./gameobject/rigidbody";
 import { Cenário } from "./scene";
 import { Tela } from "./tela";
 
@@ -28,6 +29,7 @@ export interface IGameConfig {
   largura?: number;
   altura?: number;
   fps: number;
+  cenário?: string;
 }
 
 declare global {
@@ -89,7 +91,7 @@ export class GameEngine extends ObserverPattern<IGameEvents> {
         if (!Object.values(Cenário.cenário).length) {
           throw new Error("Nenhum cenário foi criado!");
         }
-        Cenário.cenário[cenário || Object.keys(Cenário.cenário)[0]].carregar(
+        Cenário.cenário[cenário || this.configurações.cenário || Object.keys(Cenário.cenário)[0]].carregar(
           this
         );
         return this.loop();
@@ -177,7 +179,12 @@ export class GameEngine extends ObserverPattern<IGameEvents> {
       depth(
         gameObject,
         (obj) => obj.filhos,
-        (obj) => obj.tick?.()
+        (obj) => {
+          if (obj instanceof RigidBody) {
+            obj.physics()
+          }
+          obj.tick?.()
+        }
       );
     });
     this.ticks++;
@@ -199,7 +206,9 @@ export class GameEngine extends ObserverPattern<IGameEvents> {
       }
       this.gameObjects
         .sort((a, b) => a.zIndex - b.zIndex)
-        .forEach((gameObject) => gameObject.render?.(tela));
+        .forEach((gameObject) => {
+          gameObject.render?.(tela);
+        });
     });
   }
 
@@ -283,5 +292,8 @@ export class GameEngine extends ObserverPattern<IGameEvents> {
         },
       });
     });
+  }
+  GameObjects<T extends {new(): K}, K>(tipo: T): K[]{
+    return Jogo.gameObjects.filter(o=>o instanceof tipo) as any[];
   }
 }

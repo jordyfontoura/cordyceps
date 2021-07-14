@@ -1,3 +1,42 @@
+export function desvioPadrão(valores: number[]): number;
+export function desvioPadrão(...valores: number[]): number;
+export function desvioPadrão(
+  first: number | number[],
+  ...valores: number[]
+): number {
+  if (typeof first === "number") {
+    const med = média(first, ...valores);
+    return Math.sqrt(
+      valores.reduce((a, b) => a + (b - med) * (b - med), first) /
+        (valores.length + 1)
+    );
+  } else {
+    const med = média(first);
+    return Math.sqrt(
+      first.reduce((a, b) => a + (b - med) * (b - med), 0) / first.length
+    );
+  }
+}
+
+export function mediana(valores: number[]): number;
+export function mediana(...valores: number[]): number;
+export function mediana(first: number | number[], ...valores: number[]) {
+  if (typeof first === "number") {
+    return valores.sort((a, b) => a - b);
+  } else {
+    const sortedList = first.sort((a, b) => a - b);
+    if (sortedList.length % 2 === 1) {
+      return sortedList[(sortedList.length - 1) / 2];
+    } else {
+      return (
+        (sortedList[sortedList.length / 2] -
+          sortedList[sortedList.length / 2 - 1]) /
+        2
+      );
+    }
+  }
+}
+
 export function média(valores: number[]): number;
 export function média(...valores: number[]): number;
 export function média(first: number | number[], ...valores: number[]) {

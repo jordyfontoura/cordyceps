@@ -65,7 +65,6 @@ export class Caminho extends GameObject {
         [75, 54, 33]
       );
       const cor = new Cor(values[0], values[1], values[2]).toHex();
-      return;
       tela.setPixel(item.posição, cor);
     }
   }

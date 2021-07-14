@@ -31,7 +31,7 @@ export abstract class GameObject {
   }
   despertar?(): void;
   tick?(): void;
-  render?(tela: Tela): void;
+  render?(tela: Tela): void | ImageData;
   quandoDestruir?(): void;
   destruir(force=false) {
     return GameEngine.destruir(this, force);

@@ -60,7 +60,10 @@ export class Tela {
   toScreenSpace(posição: Vetor, from: "client" | "world") {
     switch (from) {
       case "client":
-        return posição.sub(this.offsetClient).div(this.clientSize).mul(this.size);
+        return posição
+          .sub(this.offsetClient)
+          .div(this.clientSize)
+          .mul(this.size);
       case "world":
         return posição
           .sub(this.posição)
@@ -106,6 +109,28 @@ export class Tela {
       1 * (this.zoomValor + 1),
       1 * (this.zoomValor + 1)
     );
+
+    this.ctx.fillStyle = tmp;
+  }
+  arc(
+    posição: Vetor,
+    radius: number,
+    cor: string = "black",
+    from: "world" | "client" | "screen" = "world"
+  ) {
+    let pos = from === "screen" ? posição : this.toScreenSpace(posição, from);
+    let tmp = this.ctx.fillStyle;
+
+    this.ctx.fillStyle = cor;
+    // this.ctx.fillRect(
+    //   pos.x,
+    //   pos.y,
+    //   1 * (this.zoomValor + 1),
+    //   1 * (this.zoomValor + 1)
+    //   );
+    this.ctx.beginPath();
+    this.ctx.arc(pos.x, pos.y, radius * (this.zoomValor + 1), 0, Math.PI * 2);
+    this.ctx.fill();
 
     this.ctx.fillStyle = tmp;
   }

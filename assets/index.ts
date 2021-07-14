@@ -21,6 +21,7 @@ const Assets: IAssets = {
   },
   configurações: {
     fps: 60,
+    cenário: 'universo'
   },
 };
 export default Assets;
