@@ -11,6 +11,7 @@ import RigidBody from "./gameobject/rigidbody";
 import { Cenário } from "./scene";
 import { Tela } from "./tela";
 
+
 type IRotina =
   | {
       tipo: "visual";
@@ -91,9 +92,11 @@ export class GameEngine extends ObserverPattern<IGameEvents> {
         if (!Object.values(Cenário.cenário).length) {
           throw new Error("Nenhum cenário foi criado!");
         }
-        Cenário.cenário[cenário || this.configurações.cenário || Object.keys(Cenário.cenário)[0]].carregar(
-          this
-        );
+        Cenário.cenário[
+          cenário ||
+            this.configurações.cenário ||
+            Object.keys(Cenário.cenário)[0]
+        ].carregar(this);
         return this.loop();
 
       case "pausado":
@@ -132,7 +135,9 @@ export class GameEngine extends ObserverPattern<IGameEvents> {
       }
       this.render();
       this.ticks++;
-      await Tempo.esperar(restringir(1000 / this.fps - relogio.decorrido, 0, Infinity) + 50);
+      await Tempo.esperar(
+        restringir(1000 / this.fps - relogio.decorrido, 0, Infinity) + 50
+      );
     }
     await this.encerrar();
   }
@@ -181,13 +186,18 @@ export class GameEngine extends ObserverPattern<IGameEvents> {
         (obj) => obj.filhos,
         (obj) => {
           if (obj instanceof RigidBody) {
-            obj.physics()
+            obj.physics();
           }
-          obj.tick?.()
+          obj.tick?.();
         }
       );
     });
+    this.physics();
     this.ticks++;
+  }
+
+  private physics() {
+    
   }
 
   private render() {
@@ -245,7 +255,9 @@ export class GameEngine extends ObserverPattern<IGameEvents> {
       if (!gameObject.ignorarNaHierarquia) {
         Editor.emitir("Editor.hierarquia.remover", { gameObject });
       }
-      await Promise.allSettled(gameObject.filhos.map((filho) => filho.destruir(true)));
+      await Promise.allSettled(
+        gameObject.filhos.map((filho) => filho.destruir(true))
+      );
       Jogo.gameObjects.splice(index, 1);
       // console.debug(
       //   `GameObject[${gameObject.id}]${
@@ -293,7 +305,7 @@ export class GameEngine extends ObserverPattern<IGameEvents> {
       });
     });
   }
-  GameObjects<T extends {new(): K}, K>(tipo: T): K[]{
-    return Jogo.gameObjects.filter(o=>o instanceof tipo) as any[];
+  GameObjects<T extends { new (): K }, K>(tipo: T): K[] {
+    return Jogo.gameObjects.filter((o) => o instanceof tipo) as any[];
   }
 }

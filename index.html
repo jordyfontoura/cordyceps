@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        position: relative;
+      }
+      .block {
+        display: flex;
+        flex-wrap: wrap;
+        min-width: 100px;
+        height: 300px;
+        justify-content: center;
+        align-items: center;
+        /* padding: 20px; */
+        background-color: aqua;
+      }
+      
+      .block .block {
+        /* bottom: calc(50% - 50px); */
+        margin: 5px;
+        top: 0;
+        width: 100px;
+        height: 100px;
+        background-color: red;
+      }
+      .big{
+        height: 120px !important;
+        background-color: blue !important;
+      }
+      .block #main{
+        background-color: green !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="block">
+      <div class="block"></div>
+      <div class="block big" id="main"></div>
+      <div class="block"></div>
+    </div>
+  </body>
+</html>

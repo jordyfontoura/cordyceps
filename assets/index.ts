@@ -12,16 +12,15 @@ const Assets: IAssets = {
   cenários,
   carregar() {
     const url = new URL(window.location.href);
-    if (url.searchParams.has('seed')) {
-      const seed =  url.searchParams.get('seed');
-      if (seed)
-        Aleatorizar.setSeed(seed);
+    if (url.searchParams.has("seed")) {
+      const seed = url.searchParams.get("seed");
+      if (seed) Aleatorizar.setSeed(seed);
     }
     console.log("Seed:", Aleatorizar.seed);
   },
   configurações: {
     fps: 60,
-    cenário: 'universo'
+    cenário: "universo",
   },
 };
 export default Assets;

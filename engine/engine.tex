@@ -1,0 +1,62 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\setcounter{MaxMatrixCols}{100}
+
+\begin{document}
+\section{GameObject}
+$$GameObject=\begin{cases}
+	\text{posição}: \vec{p}=(x,y)\\
+	tamanho: \vec{s}=(x,y)\\
+	\text{ângulo da tela}:\mu \to \mathbb{R}\\
+	\text{posição na tela}:\vec{d}=(x,y)\\
+	\text{zoom da tela}:\beta \to \mathbb{R}\\
+	\text{ângulo}: \alpha \to  \mathbb{R}\\
+	\text{velocidade angular}: \theta \to \mathbb{R}\\
+	velocidade: \vec{v}=(x,y)\\
+	\text{aceleração}: \vec{a}=(x,y)\\
+	\text{aceleração angular}: \sigma \to \mathbb{R} \\
+	\text{variação de tempo}: \Delta t \to \mathbb{R}
+	
+\end{cases}
+$$
+$$
+\begin{bmatrix}
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & \frac{1}{\Delta t} & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+\end{bmatrix}
+\begin{bmatrix}
+	\Delta t\\
+	\vec{d}_x \\ 
+	\vec{d}_y \\
+	\mu \\
+	\vec{s}_x \\ 
+	\vec{s}_y \\
+	\beta\\
+	\vec{p}_x \\ 
+	\vec{p}_y \\ 
+	\alpha \\
+	\vec{v}_x \\ 
+	\vec{v}_y \\ 
+	\theta \\
+	\vec{a}_x \\ 
+	\vec{a}_y \\ 
+	\sigma \\
+\end{bmatrix}
+$$
+
+\end{document}

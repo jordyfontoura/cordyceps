@@ -23,28 +23,28 @@ export class Estrela extends RigidBody {
     this.gravidade();
     if (
       !this.trace.length ||
-      this.posição.sub(this.trace[this.trace.length - 1]).sqrMagnitude > 20 ** 2
+      this.posição.sub(this.trace[this.trace.length - 1]).sqrMagnitude > 2 ** 2
     ) {
       this.trace.push(this.posição);
-      // if (this.trace.length > 10) {
-      //   // this.trace = this.trace.slice(3)
-      // }
+      if (this.trace.length > 100) {
+        this.trace = this.trace.slice(1);
+      }
     }
   }
   render(tela: Tela) {
+    tela.ctx.strokeStyle = this.cor;
+    tela.ctx.fillStyle = this.cor;
     tela.ctx.beginPath();
 
-    tela.ctx.moveTo(
-      Editor.ToScreenSpace(this.posição, tela, "world").x,
-      Editor.ToScreenSpace(this.posição, tela, "world").y
-    );
-    tela.ctx.strokeStyle = "#aaa";
     this.trace
-      .reverse()
       .map((t) => Editor.ToScreenSpace(t, tela, "world"))
       .forEach((t) => {
         tela.ctx.lineTo(t.x, t.y);
       });
+    tela.ctx.lineTo(
+      Editor.ToScreenSpace(this.posição, tela, "world").x,
+      Editor.ToScreenSpace(this.posição, tela, "world").y
+    );
     tela.ctx.stroke();
     tela.arc(
       this.posição,

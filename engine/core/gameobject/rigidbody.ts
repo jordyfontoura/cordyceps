@@ -35,7 +35,7 @@ export default class RigidBody extends GameObject {
 }
 
 class Physics {
-  static G = 1;
+  static G = 100;
   /**
    *
    * @param rho densidade do líquido
@@ -49,6 +49,8 @@ class Physics {
   }
 
   static gravidade(m1: number, m2: number, p1: Vetor, p2: Vetor) {
-    return p2.sub(p1).mul((Physics.G * m1 * m2) / p2.sub(p1).magnitude ** 3);
+    return p2
+      .sub(p1)
+      .normalizado.mul((Physics.G * m1 * m2) / p2.sub(p1).magnitude ** 2);
   }
 }
