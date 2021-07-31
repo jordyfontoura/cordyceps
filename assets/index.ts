@@ -20,7 +20,7 @@ const Assets: IAssets = {
   },
   configurações: {
     fps: 60,
-    cenário: "universo",
+    cenário: "laboratorio",
   },
 };
 export default Assets;

@@ -1,4 +1,5 @@
 import Aleatorizar from "game/utils/random";
+import Size from "game/utils/size";
 import { Vetor } from "game/utils/vetor";
 import { GameEngine, Jogo } from "./game";
 import { Tela } from "./tela";
@@ -11,6 +12,7 @@ export abstract class GameObject {
   pai?: GameObject;
   filhos: GameObject[]=[];
   ignorarNaHierarquia: boolean = false;
+  area: Size=new Size(0,0)
 
   constructor(
     position: Vetor = Vetor.Zero,
